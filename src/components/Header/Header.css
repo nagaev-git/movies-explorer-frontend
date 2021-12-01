@@ -4,8 +4,7 @@
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    background-color: rgba(7, 48, 66, 1);
+    align-items: center;;
   }
   
   .header__logo {
@@ -44,7 +43,7 @@
   }
   
   .header__auth-link_type_register {
-    color: hsla(0, 0%, 100%, 1);
+    color: #000000;
     text-align: right;
   }
   
@@ -53,7 +52,7 @@
     width: 76px;
     box-sizing: border-box;
     border-radius: 3px;
-    background-color: hsla(147, 69%, 55%, 1);
+    background-color: #2BE080;
     padding: 8px 20px;
     text-align: center;
   }
