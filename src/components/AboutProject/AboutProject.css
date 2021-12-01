@@ -1,0 +1,105 @@
+.about-project {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 110px 70px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  
+  .about-project__header {
+    width: 100%;
+    text-align: left;
+    padding: 0 0 23px 0;
+    margin: 0;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 27px;
+    letter-spacing: -0.04em;
+    border-bottom: 1px solid #000000;
+  }
+  
+  .about-project__stage-container {
+    margin: 70px 0 110px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  .about-project__stage {
+    display: flex;
+    flex-direction: column;
+    max-width: 550px;
+  }
+  
+  .about-project__stage-title {
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.04em;
+    margin: 0 0 26px 0;
+  }
+  
+  .about-project__stage-subtitle {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
+  }
+  
+  .about-project__timeline-container {
+    width: 100%;
+    display: flex;
+  }
+  
+  .about-project__timeline-time {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    padding: 9px 14px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .about-project__timeline-time_type_backend {
+    color: #000000;
+    background: #2BE080;
+    width: 17.81vw;
+    max-width: 228px;
+  }
+  
+  .about-project__timeline-time_type_frontend {
+    color: #000000;
+    background: #F2F2F2;
+    width: 71.25vw;
+    max-width: 912px;
+  }
+  
+  .about-project__timeline-description {
+    margin: 14px 0 0 0;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: hsla(0, 0%, 55%, 1);
+  }
+  
+  @media (max-width: 800px) {
+    .about-project {
+      padding: 90px 50px;
+    }
+    .about-project__stage-container {
+      margin: 70px 0 93px 0;
+    }
+    .about-project__timeline-time_type_backend {
+      width: 18.23vw;
+    }
+    .about-project__timeline-time_type_frontend {
+      width: 68.75vw;
+    }
+  }

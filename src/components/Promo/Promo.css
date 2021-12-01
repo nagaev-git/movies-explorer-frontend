@@ -10,9 +10,11 @@
   }
   
   .promo__title {
+    max-width: 730px;
     margin: 160px 0 151px 0;
     font-weight: normal;
     font-size: 50px;
     line-height: 58px;
     text-align: center;
+    letter-spacing: -0.04em;
   }
