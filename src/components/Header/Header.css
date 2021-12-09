@@ -21,6 +21,11 @@
     opacity: .8;
   }
 
+  .header__logo:focus {
+    border: none;
+    outline: 1px solid #2be080;
+  }
+
   .header__link-container {
     list-style: none;
     padding: 0;
@@ -42,6 +47,11 @@
   .header__auth-link:hover {
     opacity: .8;
   }
+
+  .header__auth-link:focus {
+    border: none;
+    outline: 1px solid #2be080;
+  }
   
   .header__auth-link_type_register {
     color: #000000;
@@ -49,7 +59,7 @@
   }
   
   .header__auth-link_type_login {
-    color: hsla(0, 0%, 0%, 1);
+    color: #000000;
     width: 76px;
     box-sizing: border-box;
     border-radius: 3px;

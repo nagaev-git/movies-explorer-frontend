@@ -1,0 +1,86 @@
+.movies-card {
+  width: 100%;
+  height: 134px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 89.06vw;
+  background: #F9F9F9;
+  box-sizing: border-box;
+  padding: 6px 6px;
+  max-width: 1140px;
+}
+
+.movies-card__info-container {
+  width: 400px;
+  margin: 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.movies-card__title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  margin: 0 0 13px 0;
+}
+
+.movies-card__duration {
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 13px;
+  color: hsla(0, 0%, 55%, 1);
+  margin: 0 0 30px 0;
+}
+
+.movies-card__button {
+  width: 14px;
+  height: 12px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  transition: opacity 0.3s ease;
+}
+
+.movies-card__button:hover {
+  opacity: 0.8;
+}
+
+.movies-button_type_active-like-btn {
+  background-image: url(../../images/like_active.svg);
+}
+
+.movies-button_type_active-like-btn:focus {
+  border: none;
+  outline: 1px solid #2be080;
+}
+
+.movies-button_type_disabled-like-btn {
+  background-image: url(../../images/like.svg);
+}
+
+.movies-button_type_disabled-like-btn:focus {
+  border: none;
+  outline: 1px solid #2be080;
+}
+
+.movies-card__button_type_close-btn {
+  background-image: url(../../images/movie-delete-button.svg);
+  background-size: contain;
+}
+
+.movies-card__button_type_close-btn:focus {
+  border: none;
+  outline: 1px solid #2be080;
+}
+
+.movies-card__film-picture {
+  width: 220px;
+  height: 122px;
+  object-fit: cover;
+}
