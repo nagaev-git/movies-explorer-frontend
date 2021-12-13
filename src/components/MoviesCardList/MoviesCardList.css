@@ -1,47 +1,71 @@
 .movies-card-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 70px 70px 80px 70px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .movies-card-list__list {
-    padding: 0 0 10px 0;
-    margin: 0;
-    box-sizing: border-box;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
-    gap: 40px;
-  }
-  
-  .movies-card-list__next-films-button {
-    width: 320px;
-    box-sizing: border-box;
-    padding: 11px 0 9px 0;
-    margin: 50px 0 0 0;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 15px;
-    text-align: center;
-    background: #F9F9F9;
-    border-radius: 6px;
-    border: none;
-    transition: opacity .3s ease;
-  }
-  
-  .movies-card-list__next-films-button:hover {
-    opacity: .8;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 70px 70px 80px 70px;
+  width: 100%;
+  box-sizing: border-box;
+}
 
-  .movies-card-list__next-films-button:focus {
-    border: none;
-    outline: 1px solid #2be080;
+.movies-card-list__list {
+  padding: 0 0 10px 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  gap: 40px;
+}
+
+.movies-card-list__next-films-button {
+  width: 320px;
+  box-sizing: border-box;
+  padding: 11px 0 9px 0;
+  margin: 50px 0 0 0;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: none;
+  transition: opacity 0.3s ease;
+}
+
+.movies-card-list__next-films-button:hover {
+  opacity: 0.8;
+}
+
+.movies-card-list__next-films-button:focus {
+  border: none;
+  outline: 1px solid #2be080;
+}
+
+@media (max-width: 800px) {
+  .movies-card-list {
+    padding: 60px 30px 80px 30px;
   }
+  .movies-card-list__list {
+    padding-bottom: 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .movies-card-list {
+    padding: 40px 10px 80px 10px;
+  }
+  .movies-card-list__list {
+    gap: 20px;
+  }
+  .movies-card-list__list {
+    padding-bottom: 20px;
+  }
+  .movies-card-list__next-films-button {
+    width: 240px;
+  }
+}

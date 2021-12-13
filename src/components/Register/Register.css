@@ -186,3 +186,48 @@
   border: none;
   outline: 1px solid #2be080;
 }
+
+@media (max-width: 800px) {
+  .register {
+    padding: 232px 0;
+  }
+  .register__form-input-list {
+    margin-bottom: 82px;
+  }
+}
+
+@media (max-width: 500px) {
+  .register {
+    padding: 56px 0 30px 0;
+  }
+  .register-container {
+    width: 260px;
+  }
+  .register__logo {
+    align-self: center;
+    margin-bottom: 50px;
+  }
+  .register__title {
+    text-align: center;
+    align-self: center;
+    margin-bottom: 80px;
+  }
+  .register__form-input-list {
+    margin-bottom: 157px;
+  }
+  .register__form-submit {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .register__form-button-container {
+    gap: 14px;
+  }
+  .register__form-helper-text {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .register__form-link {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
