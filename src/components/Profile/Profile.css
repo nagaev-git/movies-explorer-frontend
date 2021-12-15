@@ -87,7 +87,7 @@
   align-items: center;
   gap: 16px;
   padding: 0;
-  width: 410px;
+  max-width: 410px;
 }
 
 .profile__button {

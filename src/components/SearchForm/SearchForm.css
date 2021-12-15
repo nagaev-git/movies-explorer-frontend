@@ -41,11 +41,6 @@
   border-radius: 8px;
 }
 
-.search-form__input-field:focus {
-  border: none;
-  outline: 1px solid #2be080;
-}
-
 .search-form__form-submit {
   background-image: url(../../images/find-button.svg);
   width: 34px;
@@ -58,11 +53,6 @@
 
 .search-form__form-submit:hover {
   opacity: 0.8;
-}
-
-.search-form__form-submit:focus {
-  border: none;
-  outline: 1px solid #2be080;
 }
 
 .search-form__checkbox-button-label {
@@ -139,7 +129,6 @@
   }
   .search-form__input-fields {
     margin-bottom: 40px;
-    padding-bottom: 15px;
   }
   .search-form__input-field {
     width: 66.25vw;

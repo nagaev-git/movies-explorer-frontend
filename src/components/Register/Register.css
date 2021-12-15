@@ -18,17 +18,12 @@
 }
 
 .register__logo {
-  background-image: url(../../images/auth_logo.svg);
+  background-image: url(../../images/logo.svg);
   width: 38px;
   height: 38px;
   align-self: flex-start;
   padding: 0;
   margin: 0 0 40px 0;
-}
-
-.register__logo:focus {
-  border: none;
-  outline: 1px solid #2be080;
 }
 
 .register__title {
@@ -99,11 +94,6 @@
   border: none;
 }
 
-.register__form-input:focus {
-  border: none;
-  outline: 1px solid #2be080;
-}
-
 .register__form-input_type_error {
   color: #ff3055;
 }
@@ -141,7 +131,7 @@
   text-align: center;
   padding: 13px 0 15px 0;
   box-sizing: border-box;
-  background-color: #3456f3;
+  background-color: #000000;
   border: none;
   border-radius: 3px;
   color: #ffffff;
@@ -151,11 +141,6 @@
 
 .register__form-submit:hover {
   opacity: 0.8;
-}
-
-.register__form-submit:focus {
-  border: none;
-  outline: 1px solid #2be080;
 }
 
 .register__form-helper-text {
@@ -171,7 +156,7 @@
   margin: 0;
   padding: 0;
   text-decoration: none;
-  color: #3456f3;
+  color: #000000;
   font-size: 14px;
   line-height: 17px;
   text-align: center;
@@ -180,11 +165,6 @@
 
 .register__form-link:hover {
   opacity: 0.7;
-}
-
-.register__form-link:focus {
-  border: none;
-  outline: 1px solid #2be080;
 }
 
 @media (max-width: 800px) {
