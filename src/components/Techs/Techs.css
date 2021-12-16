@@ -102,6 +102,7 @@
 @media (max-width: 500px) {
   .techs {
     padding: 60px 14px 70px 14px;
+    background: transparent;
   }
   .techs__header {
     padding-bottom: 28px;

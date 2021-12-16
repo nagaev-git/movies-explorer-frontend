@@ -6,7 +6,7 @@ export default function SearchForm() {
     <section className="search-form">
       <form className="search-form__form" name="search">
         <div className="search-form__input-fields">
-          <input placeholder="Фильм" type="search" required className="search-form__input-field" />
+          <input name="film-name" placeholder="Фильм" type="search" required className="search-form__input-field" />
           <button aria-label="найти фильмы" type="submit" className="search-form__form-submit" />
         </div>
         <label htmlFor="short-films" className="search-form__checkbox-button-label">
