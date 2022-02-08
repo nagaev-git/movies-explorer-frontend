@@ -1,15 +1,57 @@
-import React from 'react'
-import './SearchForm.css'
+import React from "react";
+import formValidationHook from "../../hooks/formValidationHook";
+import "./SearchForm.css";
 
 export default function SearchForm() {
+  const { values, isValid, handleChange } = formValidationHook({
+    search: "",
+  });
+  const [isError, setIsError] = React.useState(false);
+  const onSubmitForm = (evt) => {
+    evt.preventDefault();
+    if (isValid) {
+      console.log("SUBMIT SEARCH");
+    } else {
+      setIsError(true);
+    }
+  };
+
   return (
     <section className="search-form">
-      <form className="search-form__form" name="search">
+      <form
+        className="search-form__form"
+        name="search"
+        noValidate
+        onSubmit={onSubmitForm}
+      >
         <div className="search-form__input-fields">
-          <input name="film-name" placeholder="Фильм" type="search" required className="search-form__input-field" />
-          <button aria-label="найти фильмы" type="submit" className="search-form__form-submit" />
+          <input
+            placeholder="Фильм"
+            type="search"
+            required
+            className="search-form__input-field"
+            onChange={handleChange}
+            value={values.search}
+          />
+          <button
+            aria-label="найти фильмы"
+            type="submit"
+            className="search-form__form-submit"
+          />
         </div>
-        <label htmlFor="short-films" className="search-form__checkbox-button-label">
+        <span
+          className={
+            !isError
+              ? "search-form__input-error-text"
+              : "search-form__input-error-text search-form__input-error-text_active"
+          }
+        >
+          Нужно ввести ключевое слово
+        </span>
+        <label
+          htmlFor="short-films"
+          className="search-form__checkbox-button-label"
+        >
           <input
             id="short-films"
             type="checkbox"
@@ -21,5 +63,5 @@ export default function SearchForm() {
         </label>
       </form>
     </section>
-  )
+  );
 }

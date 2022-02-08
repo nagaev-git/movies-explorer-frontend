@@ -33,7 +33,7 @@ export default function AboutMe() {
             <li>
               <a
                 className="about-me__info-social-link"
-                href="https://github.com/nagaev1"
+                href="https://github.com/nagaev-git"
                 target="_blank"
                 rel="noopener noreferrer"
               >
