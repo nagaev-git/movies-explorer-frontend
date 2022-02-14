@@ -15,7 +15,8 @@ export default function MoviesCardList({
   const filmDuration = (movie) =>
     `${Math.floor(movie.duration / 60)}ч ${movie.duration % 60}м`;
   // renderCounter - сколько мы отрежем от общего массива с фильмами
-  const renderArray = movies.slice(0, renderCounter);
+  // если вкладка "сохранённые фильмы, то надо отрендерить все фильмы сразу"
+  const renderArray = isSaved ? movies : movies.slice(0, renderCounter);
   const handleAddingBtn = () => {
     // проверяем может ли мы ещё добавить полное количество карточек
     if (dataLength - renderCounter < cardCount) {
@@ -61,7 +62,7 @@ export default function MoviesCardList({
         </ul>
       )}
 
-      {isBtnVisible && (
+      {!isSaved && isBtnVisible && (
         <button
           onClick={handleAddingBtn}
           type="button"
