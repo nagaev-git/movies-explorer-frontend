@@ -12,7 +12,7 @@ import Login from "../Login/Login";
 function App() {
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   const [cardCount, setCardCount] = React.useState(
-    window.innerWidth > 500 ? 7 : 5
+    window.innerWidth > 500 ? 6 : 5
   );
   const handleResize = () => {
     // Записываем сайт в стейт
@@ -29,7 +29,7 @@ function App() {
   }, []);
   // Дёрнем этот юзЭффект если изменится стейт ширины экрана и выставим актуальное количество карточек
   React.useEffect(() => {
-    setCardCount(window.innerWidth > 500 ? 7 : 5);
+    setCardCount(window.innerWidth > 500 ? 6 : 5);
   }, [screenWidth]);
 
   return (

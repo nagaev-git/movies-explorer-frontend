@@ -20,6 +20,7 @@ export default function SearchForm({ isSaved, cardCount }) {
   const [shortFilmsArray, setShortFilmsArray] = React.useState([]);
   const [filterFilmArray, setFilterFilmArray] = React.useState([]);
   const [isNetworkError, setIsNetworkError] = React.useState(false);
+  const [isInputDisabled, setIsInputDisabled] = React.useState(false);
   // стейт для кнопки из MoviesCardList
   const [isBtnVisible, setIsBtnVisible] = React.useState(false);
   // Функция фильтрации по имени
@@ -33,6 +34,8 @@ export default function SearchForm({ isSaved, cardCount }) {
       console.log("SUBMIT SEARCH");
       setIsError(false);
       setIsNetworkError(false);
+      // Блокируем инпут
+      setIsInputDisabled(true);
       // Запускаем прелоадер
       setIsPreloaderVisible(true);
       getMovies()
@@ -42,6 +45,8 @@ export default function SearchForm({ isSaved, cardCount }) {
           setRenderCounter(cardCount);
           // Отключаем прелоадер
           setIsPreloaderVisible(false);
+          // Разблокируем инпут
+          setIsInputDisabled(false);
           // Фильтруем фильмы
           const filteredFilms = filterItems(movies, values.search);
           // Записываем эти фильтры в стейт отфильтрованного
@@ -71,6 +76,8 @@ export default function SearchForm({ isSaved, cardCount }) {
           setIsPreloaderVisible(false);
           setIsNetworkError(true);
           console.log(err);
+          // Разблокируем инпут
+          setIsInputDisabled(false);
         });
     } else {
       setIsError(true);
@@ -128,6 +135,7 @@ export default function SearchForm({ isSaved, cardCount }) {
               className="search-form__input-field"
               onChange={handleChange}
               value={values.search}
+              disabled={isInputDisabled}
             />
             <button
               aria-label="найти фильмы"

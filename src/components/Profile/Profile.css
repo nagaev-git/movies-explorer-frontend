@@ -79,6 +79,11 @@
   outline: 1px solid #2be080;
 }
 
+.profile__form-input_type_error:focus {
+  border: none;
+  outline: 1px solid #ff004d;
+}
+
 .profile__button-container {
   margin: 220px 0 0 0;
   display: flex;
@@ -103,6 +108,10 @@
   transition: opacity 0.3s ease;
 }
 
+.profile__button:disabled {
+  color: #000;
+}
+
 .profile__button:focus {
   border: none;
   outline: 1px solid #2be080;
@@ -114,6 +123,13 @@
 
 .profile__button_type_exit {
   color: #ff004d;
+}
+
+.profile__error-field {
+  color: #ff004d;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
 }
 
 @media (max-width: 800px) {
@@ -148,6 +164,10 @@
     margin-top: 379px;
   }
   .profile__button {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .profile__error-field {
     font-size: 12px;
     line-height: 15px;
   }
