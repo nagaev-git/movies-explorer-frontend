@@ -1,4 +1,4 @@
-const baseUrl = "localhost:3002";
+const baseUrl = "http://localhost:3002";
 
 // Метод для проверки ответа
 function checkResponse(res) {

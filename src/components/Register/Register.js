@@ -3,17 +3,21 @@ import { Link } from "react-router-dom";
 import formValidationHook from "../../utils/hooks/formValidationHook";
 import "./Register.css";
 
-export default function Register() {
+export default function Register({ handleRegister }) {
   const { values, isValid, handleChange, errors } = formValidationHook({
     email: "",
     password: "",
     name: "",
   });
 
-  const onFormSumbit = (evt) => {
+  const onRegisterSumbit = (evt) => {
     evt.preventDefault();
     if (isValid) {
-      console.log("Regiser SUBMIT");
+      handleRegister({
+        email: values.email,
+        name: values.name,
+        password: values.password,
+      });
     } else {
       console.log("Register Error");
     }
@@ -27,7 +31,7 @@ export default function Register() {
         <form
           name="register"
           className="register__form"
-          onSubmit={onFormSumbit}
+          onSubmit={onRegisterSumbit}
         >
           <ul className="register__form-input-list">
             <li className="register__form-input-list-item">
