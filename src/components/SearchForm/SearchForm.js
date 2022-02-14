@@ -4,7 +4,6 @@ import "./SearchForm.css";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import getMovies from "../../utils/api/MoviesApi";
 import Preloader from "../Preloader/Preloader";
-
 export default function SearchForm({ isSaved }) {
   const { values, isValid, handleChange } = formValidationHook({
     search: "",
@@ -16,6 +15,10 @@ export default function SearchForm({ isSaved }) {
   const [moviesStorage, setMoviesStorage] = React.useState([]);
   const [isPreloaderVisible, setIsPreloaderVisible] = React.useState(false);
   const [isNothingFound, setIsNothingFound] = React.useState(false);
+  const [isShort, setIsShort] = React.useState(false);
+  const [shortFilmsArray, setShortFilmsArray] = React.useState([]);
+  const [filterFilmArray, setFilterFilmArray] = React.useState([]);
+  const [isNetworkError, setIsNetworkError] = React.useState(false);
   // Функция фильтрации по имени
   const filterItems = (arr, query) =>
     arr.filter(
@@ -26,6 +29,7 @@ export default function SearchForm({ isSaved }) {
     if (isValid) {
       console.log("SUBMIT SEARCH");
       setIsError(false);
+      setIsNetworkError(false);
       // Запускаем прелоадер
       setIsPreloaderVisible(true);
       getMovies()
@@ -35,6 +39,12 @@ export default function SearchForm({ isSaved }) {
           setIsPreloaderVisible(false);
           // Фильтруем фильмы
           const filteredFilms = filterItems(movies, values.search);
+          // Записываем эти фильтры в стейт отфильтрованного
+          setFilterFilmArray(filteredFilms);
+          // Заранее записываем в стейт короткометражки
+          setShortFilmsArray(
+            filteredFilms.filter((movie) => movie.duration <= 40)
+          );
           // Записываем длину массива с фильмами
           setDataLenght(filteredFilms.length);
           // Записываем фильмы в стейт
@@ -50,13 +60,28 @@ export default function SearchForm({ isSaved }) {
         })
         .catch((err) => {
           setIsPreloaderVisible(false);
+          setIsNetworkError(true);
           console.log(err);
         });
     } else {
       setIsError(true);
     }
   };
-
+  // Обработчик для чекбокса
+  const onShortFilmsCheckbox = () => {
+    console.log("checkbox click");
+    // Переключаем стейт
+    setIsShort(!isShort);
+  };
+  // При изменении стейта будем менять массив, который идёт на рендер
+  React.useEffect(() => {
+    if (isShort) {
+      setMoviesStorage(shortFilmsArray);
+    } else {
+      setMoviesStorage(filterFilmArray);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isShort]);
   return (
     <>
       <section className="search-form">
@@ -100,6 +125,7 @@ export default function SearchForm({ isSaved }) {
               type="checkbox"
               className="search-form__input-checkbox-button-invisible"
               name="short-films"
+              onChange={onShortFilmsCheckbox}
             />
             <span className="search-form__input-checkbox-button-visible" />
             <span className="search-form__checkbox-title">Короткометражки</span>
@@ -116,7 +142,15 @@ export default function SearchForm({ isSaved }) {
         />
       )}
       {isPreloaderVisible && <Preloader />}
-      {isNothingFound && <p className="search-form__error-text">Ничего не найдено</p>}
+      {isNothingFound && (
+        <p className="search-form__error-text">Ничего не найдено</p>
+      )}
+      {isNetworkError && (
+        <p className="search-form__error-text">
+          Во время запроса произошла ошибка. Возможно, проблема с соединением
+          или сервер недоступен. Подождите немного и попробуйте ещё раз.
+        </p>
+      )}
     </>
   );
 }
