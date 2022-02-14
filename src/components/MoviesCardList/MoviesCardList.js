@@ -8,21 +8,23 @@ export default function MoviesCardList({
   dataLength,
   renderCounter,
   setRenderCounter,
+  cardCount,
+  isBtnVisible,
+  setIsBtnVisible,
 }) {
   const filmDuration = (movie) =>
     `${Math.floor(movie.duration / 60)}ч ${movie.duration % 60}м`;
+  // renderCounter - сколько мы отрежем от общего массива с фильмами
   const renderArray = movies.slice(0, renderCounter);
-  const [isBtnVisible, setIsBtnVisible] = React.useState(
-    !(dataLength - renderCounter <= 7)
-  );
   const handleAddingBtn = () => {
     // проверяем может ли мы ещё добавить полное количество карточек
-    if (dataLength - renderCounter < 7) {
+    if (dataLength - renderCounter < cardCount) {
       setRenderCounter(renderCounter + (dataLength - renderCounter));
       setIsBtnVisible(false);
       console.log(renderCounter);
     } else {
-      setRenderCounter(renderCounter + 7);
+      setIsBtnVisible(true);
+      setRenderCounter(renderCounter + cardCount);
       console.log(renderCounter);
     }
   };

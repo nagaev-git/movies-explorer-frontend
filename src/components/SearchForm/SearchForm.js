@@ -4,13 +4,14 @@ import "./SearchForm.css";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import getMovies from "../../utils/api/MoviesApi";
 import Preloader from "../Preloader/Preloader";
-export default function SearchForm({ isSaved }) {
+
+export default function SearchForm({ isSaved, cardCount }) {
   const { values, isValid, handleChange } = formValidationHook({
     search: "",
   });
   const [isError, setIsError] = React.useState(false);
   const [isFinding, setIsFinding] = React.useState(false);
-  const [renderCounter, setRenderCounter] = React.useState(7);
+  const [renderCounter, setRenderCounter] = React.useState(cardCount);
   const [dataLength, setDataLenght] = React.useState(0);
   const [moviesStorage, setMoviesStorage] = React.useState([]);
   const [isPreloaderVisible, setIsPreloaderVisible] = React.useState(false);
@@ -19,6 +20,8 @@ export default function SearchForm({ isSaved }) {
   const [shortFilmsArray, setShortFilmsArray] = React.useState([]);
   const [filterFilmArray, setFilterFilmArray] = React.useState([]);
   const [isNetworkError, setIsNetworkError] = React.useState(false);
+  // стейт для кнопки из MoviesCardList
+  const [isBtnVisible, setIsBtnVisible] = React.useState(false);
   // Функция фильтрации по имени
   const filterItems = (arr, query) =>
     arr.filter(
@@ -35,6 +38,8 @@ export default function SearchForm({ isSaved }) {
       getMovies()
         .then((movies) => {
           console.log(movies);
+          // Выставляем начальное число рендера карт
+          setRenderCounter(cardCount);
           // Отключаем прелоадер
           setIsPreloaderVisible(false);
           // Фильтруем фильмы
@@ -47,6 +52,10 @@ export default function SearchForm({ isSaved }) {
           );
           // Записываем длину массива с фильмами
           setDataLenght(filteredFilms.length);
+          // Выставляем видимость/невидимость кнопки "ещё"
+          console.log("dataLength ", filteredFilms.length);
+          console.log("cardCount ", cardCount);
+          setIsBtnVisible(filteredFilms.length > cardCount);
           // Записываем фильмы в стейт
           setMoviesStorage(filteredFilms);
           if (filteredFilms.length === 0) {
@@ -139,6 +148,9 @@ export default function SearchForm({ isSaved }) {
           dataLength={dataLength}
           renderCounter={renderCounter}
           setRenderCounter={setRenderCounter}
+          cardCount={cardCount}
+          isBtnVisible={isBtnVisible}
+          setIsBtnVisible={setIsBtnVisible}
         />
       )}
       {isPreloaderVisible && <Preloader />}
