@@ -40,6 +40,7 @@ export default function MoviesCardList({
                   filmDuration={filmDuration(movie)}
                   filmPicture={`https://api.nomoreparties.co${movie.image.url}`}
                   isSaved={isSaved}
+                  trailerLink={movie.trailerLink}
                 />
               </li>
             ))}

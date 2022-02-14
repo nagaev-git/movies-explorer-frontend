@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from "react";
 import "./MoviesCard.css";
 
@@ -5,15 +7,23 @@ export default function MoviesCard({
   filmName,
   filmDuration,
   filmPicture,
-  isLiked,
   isSaved,
+  trailerLink,
 }) {
+  const [isLiked, setIsLikied] = React.useState(false);
+  const handleOpenTrailer = () => {
+    window.open(`${trailerLink}`, `Трейлер фильма "${filmName}"`);
+  };
+  const handleLikeClick = () => {
+    setIsLikied(!isLiked)
+  }
   return (
     <div className="movies-card">
       <img
         className="movies-card__film-picture"
         alt="картинка фильма"
         src={filmPicture}
+        onClick={handleOpenTrailer}
       />
       {isSaved && (
         <button
@@ -26,6 +36,7 @@ export default function MoviesCard({
         <button
           aria-label="like"
           type="button"
+          onClick={handleLikeClick}
           className={
             isLiked
               ? `movies-card__button movies-button_type_active-like-btn`
