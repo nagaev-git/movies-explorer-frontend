@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import formValidationHook from "../../utils/hooks/formValidationHook";
 import "./Register.css";
 
-export default function Register({ handleRegister }) {
+export default function Register({ handleRegister, registerNetworkError }) {
   const { values, isValid, handleChange, errors } = formValidationHook({
     email: "",
     password: "",
@@ -93,7 +93,17 @@ export default function Register({ handleRegister }) {
                     : "register__form-input-error"
                 }
               >
-                {errors?.name} {errors?.email} {errors?.password}
+                {errors?.name} {errors?.email} {errors?.password}{" "}
+                {registerNetworkError}
+              </span>
+              <span
+                className={
+                  registerNetworkError
+                    ? "register__form-input-error register__form-input-error_active"
+                    : "register__form-input-error"
+                }
+              >
+                {registerNetworkError}
               </span>
             </li>
           </ul>

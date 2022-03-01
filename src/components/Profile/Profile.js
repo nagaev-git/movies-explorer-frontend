@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Profile.css";
 import Header from "../Header/Header";
 import formValidationHook from "../../utils/hooks/formValidationHook";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
-export default function Profile() {
+export default function Profile({
+  updProfileNetworkError,
+  handleEditProfile,
+  handleExitAccount,
+  isAuth,
+}) {
+  // Получаем текущего пользователя из контекста
+  const currentUser = useContext(CurrentUserContext);
   const { values, isValid, handleChange, errors } = formValidationHook({
     profileEmail: "",
     profileName: "",
@@ -12,14 +20,16 @@ export default function Profile() {
   const onFormSumbit = (evt) => {
     evt.preventDefault();
     if (isValid) {
+      handleEditProfile({
+        name: values.profileName,
+        email: values.profileEmail,
+      });
       console.log("profile submit");
-    } else {
-      console.log("noSubmit");
     }
   };
   return (
     <>
-      <Header isLogin />
+      <Header isAuth={isAuth} />
       <section className="profile">
         <form
           className="profile__form"
@@ -27,7 +37,7 @@ export default function Profile() {
           onSubmit={onFormSumbit}
           noValidate
         >
-          <h1 className="profile__form-title">Привет, Александр!</h1>
+          <h1 className="profile__form-title">{`Привет, ${currentUser?.name}`}</h1>
           <ul className="profile__form-input-list">
             <li className="profile__form-input-item">
               <p className="profile__form-input-label">Имя</p>
@@ -74,6 +84,11 @@ export default function Profile() {
                 {errors.profileEmail}
               </span>
             )}
+            {updProfileNetworkError && (
+              <span className="profile__error-field">
+                {updProfileNetworkError}
+              </span>
+            )}
             <button
               type="submit"
               className="profile__button"
@@ -84,6 +99,7 @@ export default function Profile() {
             <button
               type="button"
               className="profile__button profile__button_type_exit"
+              onClick={handleExitAccount}
             >
               Выйти из аккаунта
             </button>

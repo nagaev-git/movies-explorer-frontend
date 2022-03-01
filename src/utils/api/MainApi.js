@@ -7,7 +7,7 @@ function checkResponse(res) {
   }
   // Если условие не выполнено, то делаем промис с ошибкой
   // eslint-disable-next-line prefer-promise-reject-errors
-  return Promise.reject(`Ошибка: ${res.status}`);
+  return Promise.reject(res);
 }
 
 const register = (name, email, password) =>
@@ -26,15 +26,6 @@ const login = (email, password) =>
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ password, email }),
-  }).then(checkResponse);
-
-const getToken = (token) =>
-  fetch(`${baseUrl}/users/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
   }).then(checkResponse);
 
 const getUserInformation = () =>
@@ -99,7 +90,6 @@ const deleteSavedMovies = (id) =>
 export {
   register,
   login,
-  getToken,
   getUserInformation,
   editProfile,
   saveMovies,

@@ -8,10 +8,10 @@ import AboutMe from "../AboutMe/AboutMe";
 import Portfolio from "../Portfolio/Portfolio";
 import Footer from "../Footer/Footer";
 
-export default function Main() {
+export default function Main({ isAuth }) {
   return (
     <>
-      <Header isLogin={false} />
+      <Header isAuth={isAuth} />
       <main className="main">
         <Promo />
         <AboutProject />

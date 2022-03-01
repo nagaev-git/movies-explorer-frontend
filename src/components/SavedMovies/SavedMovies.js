@@ -4,10 +4,10 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import SearchForm from "../SearchForm/SearchForm";
 
-export default function SavedMovies({ cardCount }) {
+export default function SavedMovies({ cardCount, isAuth }) {
   return (
     <>
-      <Header isLogin />
+      <Header isAuth={isAuth} />
       <SearchForm isSaved cardCount={cardCount} />
       <Footer />
     </>

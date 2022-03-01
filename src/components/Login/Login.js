@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import formValidationHook from "../../utils/hooks/formValidationHook";
 import "./Login.css";
 
-export default function login() {
+export default function login({ handleLogin, loginNetworkError }) {
   const { values, isValid, handleChange, errors } = formValidationHook({
     email: "",
     password: "",
@@ -13,6 +13,8 @@ export default function login() {
     evt.preventDefault();
     if (isValid) {
       console.log("Login SUBMIT");
+      // Если все поля валидны, то можно залогиниться
+      handleLogin({ email: values.email, password: values.password });
     } else {
       console.log("Login Error");
     }
@@ -72,6 +74,15 @@ export default function login() {
                 }
               >
                 {errors?.email} {errors?.password}
+              </span>
+              <span
+                className={
+                  loginNetworkError
+                    ? "login__form-input-error login__form-input-error_active"
+                    : "login__form-input-error"
+                }
+              >
+                {loginNetworkError}
               </span>
             </li>
           </ul>
