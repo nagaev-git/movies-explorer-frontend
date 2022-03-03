@@ -13,6 +13,9 @@ import {
   login,
   getUserInformation,
   editProfile,
+  saveMovies,
+  deleteSavedMovies,
+  getMovies,
 } from "../../utils/api/MainApi";
 
 function App() {
@@ -26,11 +29,37 @@ function App() {
   const [loginNetworkError, setLoginNetworkError] = React.useState("");
   const [updProfileNetworkError, setUpdProfileNetworkError] =
     React.useState("");
-  // eslint-disable-next-line no-unused-vars
+  const [savedMovies, setSavedMovies] = React.useState("");
   const [isAuth, setIsAuth] = React.useState("");
   const handleResize = () => {
     // Записываем сайт в стейт
     setScreenWidth(window.innerWidth);
+  };
+
+  const tokenCheck = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      getUserInformation()
+        .then((userInfo) => {
+          // проверяем пришли ли данные
+          if (userInfo.name) {
+            // Записываем данные в контекст
+            console.log("userInfo", userInfo);
+            setCurrentUser(userInfo);
+            // Записываем стейт авторизации
+            setIsAuth(true);
+            // Запрашиваем сохранённые фильмы
+            getMovies()
+              .then((res) => {
+                console.log("Фильмы сохранённые этим юзером, ", res);
+                // Сохраняем фильмы в стейт
+                setSavedMovies(res);
+              })
+              .catch((err) => console.log(err));
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   React.useEffect(() => {
@@ -45,6 +74,12 @@ function App() {
   React.useEffect(() => {
     setCardCount(window.innerWidth > 500 ? 6 : 5);
   }, [screenWidth]);
+
+  // Получаем данные пользователя при монтировании компонента
+  React.useEffect(() => {
+    tokenCheck();
+  }, []);
+
   const handleLogin = ({ email, password }) => {
     // Обнуляем ошибку логина
     setLoginNetworkError("");
@@ -150,16 +185,65 @@ function App() {
     history.push("/");
   };
 
+  const handleSaveFilm = ({ movie }) => {
+    // вызываем метод Api для сохранения фильма
+    // Если всё норм, вернём название фильма
+    saveMovies(movie)
+      .then((savedMovie) => {
+        console.log("anwer like:", savedMovie.nameRU);
+        // eslint-disable-next-line no-param-reassign
+        // Получаем новый массив сохранённых фильмов
+        getMovies()
+          .then((res) => {
+            console.log("Фильмы сохранённые этим юзером, ", res);
+            // Сохраняем фильмы в стейт
+            setSavedMovies(res);
+          })
+          .catch((err) => console.log(err));
+      })
+      // eslint-disable-next-line prefer-promise-reject-errors
+      .catch(() => Promise.reject(false));
+  };
+
+  const handleDeleteFilm = ({ movieId }) => {
+    // Если удаление прошло успешно, то вернём true, чтобы удалить лайк
+    deleteSavedMovies(movieId)
+      .then(() => {
+        console.log("succes delete");
+        // Получаем новый массив сохранённых фильмов
+        getMovies()
+          .then((res) => {
+            console.log("Фильмы сохранённые этим юзером, ", res);
+            // Сохраняем фильмы в стейт
+            setSavedMovies(res);
+          })
+          .catch((err) => console.log(err));
+      })
+      // eslint-disable-next-line prefer-promise-reject-errors
+      .catch((err) => console.log(err));
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
           <Switch>
             <Route path="/movies">
-              <Movies cardCount={cardCount} isAuth={isAuth} />
+              <Movies
+                cardCount={cardCount}
+                isAuth={isAuth}
+                handleSaveFilm={handleSaveFilm}
+                handleDeleteFilm={handleDeleteFilm}
+                savedMovies={savedMovies}
+              />
             </Route>
             <Route path="/saved-movies">
-              <SavedMovies cardCount={cardCount} isAuth={isAuth} />
+              <SavedMovies
+                cardCount={cardCount}
+                isAuth={isAuth}
+                handleDeleteFilm={handleDeleteFilm}
+                savedMovies={savedMovies}
+              />
             </Route>
             <Route path="/profile">
               <Profile

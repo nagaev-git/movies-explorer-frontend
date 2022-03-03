@@ -1,28 +1,94 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from "react";
 import "./MoviesCard.css";
 
 export default function MoviesCard({
-  filmName,
+  movie,
   filmDuration,
-  filmPicture,
   isSaved,
-  trailerLink,
+  handleDeleteFilm,
+  handleSaveFilm,
+  savedMovies,
 }) {
-  const [isLiked, setIsLikied] = React.useState(false);
-  const handleOpenTrailer = () => {
-    window.open(`${trailerLink}`, `Трейлер фильма "${filmName}"`);
+  const aproovedMovie = {
+    country: movie.country || "Нет данных",
+    director: movie.director || "Нет данных",
+    duration: movie.duration || 0,
+    year: movie.year || "Нет данных",
+    description: movie.description || " ",
+    image: isSaved
+      ? movie.image
+      : `https://api.nomoreparties.co${movie.image.url}`,
+    trailer: isSaved ? movie.trailer : movie.trailerLink,
+    thumbnail: isSaved
+      ? movie.thumbnail
+      : `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}`,
+    movieId: isSaved ? movie._id : movie.id,
+    nameRU: movie.nameRU || "Нет данных",
+    nameEN: movie.nameEN || "Нет данных",
   };
-  const handleLikeClick = () => {
-    setIsLikied(!isLiked)
-  }
+  const [isLiked, setIsLiked] = React.useState(false);
+  const [deletingMovieId, setIsDeletingMovieId] = React.useState("0");
+  // При монтировании проверяем надо ли лайкать карточку
+  React.useEffect(() => {
+    // Выполняем эти действия, если сейчас не роут /saved-movies
+    if (!isSaved) {
+      console.log("this movie id", movie.id);
+      const checkSave = savedMovies.find((item) => +item.movieId === +movie.id);
+      if (checkSave) {
+        setIsLiked(true);
+      } else {
+        setIsLiked(false);
+      }
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // Выполняем эти действия, если сейчас не роут /saved-movies
+    if (!isSaved) {
+      // Выставляем лайк
+      const checkSave = savedMovies.find((item) => +item.movieId === +movie.id);
+      if (checkSave) {
+        setIsLiked(true);
+        // Записываем из _id в _id
+        console.log("checkSave, ", checkSave._id);
+        aproovedMovie.movieId = checkSave._id;
+        setIsDeletingMovieId(checkSave._id);
+        console.log("aproovedMovie.movieId, ", aproovedMovie.movieId);
+      } else {
+        setIsLiked(false);
+      }
+    }
+  }, [savedMovies]);
+  // Часть фильмов приходит без некоторых полей и их надо заполнить
+
+  const handleOpenTrailer = () => {
+    window.open(
+      `${aproovedMovie.trailer}`,
+      `Трейлер фильма "${aproovedMovie.nameRU}"`
+    );
+  };
+  const handleLikeClick = async () => {
+    // Проверяем был ли лайкнут фильм
+    if (isLiked) {
+      // Если да, то надо удалить лайк
+      console.log("deleting movieId, ", aproovedMovie.movieId);
+      handleDeleteFilm({ movieId: deletingMovieId });
+      //setIsLiked(false);
+    } else {
+      // Если фильм не лайкнут, то лайкаем
+      handleSaveFilm({ movie: aproovedMovie });
+      //setIsLiked(true);
+    }
+  };
   return (
     <div className="movies-card">
       <img
         className="movies-card__film-picture"
         alt="картинка фильма"
-        src={filmPicture}
+        src={aproovedMovie.image}
         onClick={handleOpenTrailer}
       />
       {isSaved && (
@@ -45,7 +111,7 @@ export default function MoviesCard({
         />
       )}
       <div className="movies-card__info-container">
-        <h3 className="movies-card__title">{filmName}</h3>
+        <h3 className="movies-card__title">{aproovedMovie.nameRU}</h3>
         <p className="movies-card__duration">{filmDuration}</p>
       </div>
     </div>

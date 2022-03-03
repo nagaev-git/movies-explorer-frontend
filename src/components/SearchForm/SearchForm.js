@@ -5,7 +5,13 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import getMovies from "../../utils/api/MoviesApi";
 import Preloader from "../Preloader/Preloader";
 
-export default function SearchForm({ isSaved, cardCount }) {
+export default function SearchForm({
+  isSaved,
+  cardCount,
+  handleSaveFilm,
+  handleDeleteFilm,
+  savedMovies,
+}) {
   const { values, isValid, handleChange } = formValidationHook({
     search: "",
   });
@@ -23,6 +29,13 @@ export default function SearchForm({ isSaved, cardCount }) {
   const [isInputDisabled, setIsInputDisabled] = React.useState(false);
   // стейт для кнопки из MoviesCardList
   const [isBtnVisible, setIsBtnVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    // Если пришли с роута /saved-movies, то надо сразу отрендерить карты без поиска
+    if (isSaved) {
+      setIsFinding(true);
+    }
+  }, []);
   // Функция фильтрации по имени
   const filterItems = (arr, query) =>
     arr.filter(
@@ -178,6 +191,9 @@ export default function SearchForm({ isSaved, cardCount }) {
           cardCount={cardCount}
           isBtnVisible={isBtnVisible}
           setIsBtnVisible={setIsBtnVisible}
+          handleDeleteFilm={handleDeleteFilm}
+          handleSaveFilm={handleSaveFilm}
+          savedMovies={savedMovies}
         />
       )}
       {isPreloaderVisible && <Preloader />}
