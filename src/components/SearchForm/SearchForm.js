@@ -16,7 +16,7 @@ export default function SearchForm({
     search: "",
   });
   const [isError, setIsError] = React.useState(false);
-  const [isFinding, setIsFinding] = React.useState(false);
+  const [isFinding, setIsFinding] = React.useState(!!isSaved);
   const [renderCounter, setRenderCounter] = React.useState(cardCount);
   const [dataLength, setDataLenght] = React.useState(0);
   const [moviesStorage, setMoviesStorage] = React.useState([]);
