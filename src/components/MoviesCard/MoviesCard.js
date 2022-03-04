@@ -43,6 +43,7 @@ export default function MoviesCard({
         setIsLiked(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -61,6 +62,7 @@ export default function MoviesCard({
         setIsLiked(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedMovies]);
   // Часть фильмов приходит без некоторых полей и их надо заполнить
 
@@ -71,8 +73,13 @@ export default function MoviesCard({
     );
   };
   const handleLikeClick = async () => {
-    // Проверяем был ли лайкнут фильм
-    if (isLiked) {
+    // Если роут /saved-movies, то просто удаляем фильм
+    console.log("delete");
+    if (isSaved) {
+      console.log("delete in if");
+      handleDeleteFilm({ movieId: aproovedMovie.movieId });
+    } else if (isLiked) {
+      // Проверяем был ли лайкнут фильм
       // Если да, то надо удалить лайк
       console.log("deleting movieId, ", aproovedMovie.movieId);
       handleDeleteFilm({ movieId: deletingMovieId });
@@ -96,6 +103,7 @@ export default function MoviesCard({
           aria-label="delete"
           type="button"
           className="movies-card__button movies-card__button_type_close-btn"
+          onClick={handleLikeClick}
         />
       )}
       {!isSaved && (
