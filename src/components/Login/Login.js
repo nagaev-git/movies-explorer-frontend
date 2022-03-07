@@ -12,11 +12,8 @@ export default function login({ handleLogin, loginNetworkError }) {
   const onFormSumbit = (evt) => {
     evt.preventDefault();
     if (isValid) {
-      console.log("Login SUBMIT");
       // Если все поля валидны, то можно залогиниться
       handleLogin({ email: values.email, password: values.password });
-    } else {
-      console.log("Login Error");
     }
   };
 

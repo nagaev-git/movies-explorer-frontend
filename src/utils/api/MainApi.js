@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3002";
+const baseUrl = "https://bestfilms.api.nomoredomains.rocks";
 
 // Метод для проверки ответа
 function checkResponse(res) {

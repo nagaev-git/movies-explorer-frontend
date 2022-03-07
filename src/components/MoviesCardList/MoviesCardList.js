@@ -16,12 +16,6 @@ export default function MoviesCardList({
   handleSaveFilm,
   savedMovies,
 }) {
-  React.useEffect(() => {
-    console.log("saved movies = ", savedMovies);
-    console.log("movies in movies = ", movies);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const filmDuration = (movie) =>
     `${Math.floor(movie.duration / 60)}ч ${movie.duration % 60}м`;
   // renderCounter - сколько мы отрежем от общего массива с фильмами
@@ -32,11 +26,9 @@ export default function MoviesCardList({
     if (dataLength - renderCounter < cardCount) {
       setRenderCounter(renderCounter + (dataLength - renderCounter));
       setIsBtnVisible(false);
-      console.log(renderCounter);
     } else {
       setIsBtnVisible(true);
       setRenderCounter(renderCounter + cardCount);
-      console.log(renderCounter);
     }
   };
   return (

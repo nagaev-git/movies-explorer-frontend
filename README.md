@@ -12,4 +12,6 @@
 
 https://www.figma.com/file/GtFRLHd6CrS7e2wRlwGSl9/Diplom - ссылка на макет в фигме
 
-<тут будет ссылка на задеплоенный фронтенд>
+https://bestfilms.nomoredomains.rocks/ - ссылка на задеплоенный проект
+
+178.154.224.235 - публичный IP сервера

@@ -24,7 +24,6 @@ export default function Profile({
         name: values.profileName,
         email: values.profileEmail,
       });
-      console.log("profile submit");
     }
   };
   return (

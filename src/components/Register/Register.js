@@ -18,8 +18,6 @@ export default function Register({ handleRegister, registerNetworkError }) {
         name: values.name,
         password: values.password,
       });
-    } else {
-      console.log("Register Error");
     }
   };
 
