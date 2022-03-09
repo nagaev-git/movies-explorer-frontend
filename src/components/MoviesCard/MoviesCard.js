@@ -35,13 +35,17 @@ export default function MoviesCard({
   const [deletingMovieId, setIsDeletingMovieId] = React.useState("0");
   // При монтировании проверяем надо ли лайкать карточку
   React.useEffect(() => {
-    // Выполняем эти действия, если сейчас не роут /saved-movies
-    if (!isSaved) {
-      const checkSave = savedMovies.find((item) => +item.movieId === +movie.id);
-      if (checkSave) {
-        setIsLiked(true);
-      } else {
-        setIsLiked(false);
+    if (savedMovies) {
+      // Выполняем эти действия, если сейчас не роут /saved-movies
+      if (!isSaved) {
+        const checkSave = savedMovies?.find(
+          (item) => +item.movieId === +movie.id
+        );
+        if (checkSave) {
+          setIsLiked(true);
+        } else {
+          setIsLiked(false);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,16 +53,20 @@ export default function MoviesCard({
 
   React.useEffect(() => {
     // Выполняем эти действия, если сейчас не роут /saved-movies
-    if (!isSaved) {
-      // Выставляем лайк
-      const checkSave = savedMovies.find((item) => +item.movieId === +movie.id);
-      if (checkSave) {
-        setIsLiked(true);
-        // Записываем из _id в _id
-        aproovedMovie.movieId = checkSave._id;
-        setIsDeletingMovieId(checkSave._id);
-      } else {
-        setIsLiked(false);
+    if (savedMovies) {
+      if (!isSaved) {
+        // Выставляем лайк
+        const checkSave = savedMovies.find(
+          (item) => +item.movieId === +movie.id
+        );
+        if (checkSave) {
+          setIsLiked(true);
+          // Записываем из _id в _id
+          aproovedMovie.movieId = checkSave._id;
+          setIsDeletingMovieId(checkSave._id);
+        } else {
+          setIsLiked(false);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

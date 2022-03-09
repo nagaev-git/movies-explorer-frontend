@@ -133,6 +133,13 @@
   text-align: center;
 }
 
+.profile__success-field {
+  color: rgb(0, 128, 0);
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+}
+
 @media (max-width: 800px) {
   .profile {
     padding: 236px 0 269px 0;

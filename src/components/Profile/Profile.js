@@ -9,23 +9,54 @@ export default function Profile({
   handleEditProfile,
   handleExitAccount,
   isAuth,
+  isSuccessSubmit,
 }) {
+  // Состояние, которым будем отслеживать было ли изменение данных
+  const [isUpdate, setIsUpdate] = React.useState(false);
+  const [isInputDisabled, setIsInputDisabled] = React.useState(false);
   // Получаем текущего пользователя из контекста
   const currentUser = useContext(CurrentUserContext);
-  const { values, isValid, handleChange, errors } = formValidationHook({
-    profileEmail: "",
-    profileName: "",
+  // Будем использоовать рефы
+  const nameRef = React.useRef("");
+  const emailRef = React.useRef("");
+
+  const { errors, handleChange, isValid } = formValidationHook({
+    name: nameRef.current.value,
+    email: emailRef.current.value,
   });
 
-  const onFormSumbit = (evt) => {
-    evt.preventDefault();
-    if (isValid) {
-      handleEditProfile({
-        name: values.profileName,
-        email: values.profileEmail,
-      });
+  React.useEffect(() => {
+    if (
+      nameRef.current.value === currentUser.name &&
+      emailRef.current.value === currentUser.email
+    ) {
+      setIsUpdate(false);
+    } else {
+      setIsUpdate(true);
     }
-  };
+  }, [
+    nameRef.current.value,
+    emailRef.current.value,
+    currentUser.name,
+    currentUser.email,
+  ]);
+
+  function onFormSumbit(evt) {
+    setIsInputDisabled(true);
+    evt.preventDefault();
+    // на всякий случай ещё раз проверим валидность
+    if (isValid) {
+      const name = nameRef.current.value;
+      const email = emailRef.current.value;
+      // Обновляем данные
+      handleEditProfile({ name, email });
+      // Очистим форму в конце
+      evt.target.reset();
+      // Разблокируем форму
+      setIsInputDisabled(false);
+    }
+    setIsInputDisabled(false);
+  }
   return (
     <>
       <Header isAuth={isAuth} />
@@ -51,7 +82,9 @@ export default function Profile({
                 placeholder="Ваше имя"
                 minLength="2"
                 maxLength="18"
-                values={values.profileName}
+                values={nameRef.current.value}
+                ref={nameRef}
+                defaultValue={currentUser.name}
                 onChange={handleChange}
                 required
               />
@@ -67,8 +100,11 @@ export default function Profile({
                     : "profile__form-input"
                 }
                 placeholder="Ваш e-mail"
-                values={values.profileEmail}
+                values={emailRef.current.value}
+                ref={emailRef}
                 onChange={handleChange}
+                disabled={isInputDisabled}
+                defaultValue={currentUser.email}
                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                 required
               />
@@ -83,6 +119,11 @@ export default function Profile({
                 {errors.profileEmail}
               </span>
             )}
+            {isSuccessSubmit && (
+              <span className="profile__success-field">
+                Ваши данные успешно изменены
+              </span>
+            )}
             {updProfileNetworkError && (
               <span className="profile__error-field">
                 {updProfileNetworkError}
@@ -91,7 +132,7 @@ export default function Profile({
             <button
               type="submit"
               className="profile__button"
-              disabled={!isValid}
+              disabled={!isValid || !isUpdate}
             >
               Редактировать
             </button>

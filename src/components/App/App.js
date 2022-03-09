@@ -19,12 +19,13 @@ import {
 } from "../../utils/api/MainApi";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import PageNotFound from "../PageNotFound/PageNotFound";
+import UnProtectedRoute from "../UnProtectedRoute/UnProtectedRoute";
 
 function App() {
   const history = useHistory();
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   const [cardCount, setCardCount] = React.useState(
-    window.innerWidth > 500 ? 6 : 5
+    window.innerWidth > 500 ? 12 : 5
   );
   const [currentUser, setCurrentUser] = React.useState({});
   const [registerNetworkError, setRegisterNetworkError] = React.useState("");
@@ -33,11 +34,14 @@ function App() {
     React.useState("");
   const [savedMovies, setSavedMovies] = React.useState("");
   const [isAuth, setIsAuth] = React.useState(false);
+  const [isSuccessSubmit, setIsSuccessSubmit] = React.useState(false);
   const handleResize = () => {
     // Записываем сайт в стейт
     setScreenWidth(window.innerWidth);
   };
 
+  const filterUserSavedFilms = (savedFilms, userId) =>
+    savedFilms.filter((film) => film.owner === userId);
   const tokenCheck = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -50,12 +54,8 @@ function App() {
             // Записываем стейт авторизации
             setIsAuth(true);
             // Запрашиваем сохранённые фильмы
-            getMovies()
-              .then((res) => {
-                // Сохраняем фильмы в стейт
-                setSavedMovies(res);
-              })
-              .catch((err) => console.log(err));
+            const savedFilms = JSON.parse(localStorage.getItem("films"));
+            setSavedMovies(savedFilms);
           }
         })
         .catch((err) => {
@@ -65,6 +65,10 @@ function App() {
         });
     }
   };
+  // Получаем данные пользователя при монтировании компонента
+  React.useEffect(() => {
+    tokenCheck();
+  }, []);
 
   React.useEffect(() => {
     // Вешаем слушатель на ресайз
@@ -76,13 +80,8 @@ function App() {
   }, []);
   // Дёрнем этот юзЭффект если изменится стейт ширины экрана и выставим актуальное количество карточек
   React.useEffect(() => {
-    setCardCount(window.innerWidth > 500 ? 6 : 5);
+    setCardCount(window.innerWidth > 500 ? 12 : 5);
   }, [screenWidth]);
-
-  // Получаем данные пользователя при монтировании компонента
-  React.useEffect(() => {
-    tokenCheck();
-  }, []);
 
   const handleLogin = ({ email, password }) => {
     // Обнуляем ошибку логина
@@ -100,7 +99,23 @@ function App() {
               setCurrentUser(userInfo);
               // Записываем стейт авторизации
               setIsAuth(true);
-              // Редиректим юзера на movies
+              // Запрашиваем сохранённые фильмы
+              const curUserID = userInfo._id;
+              getMovies()
+                .then((res) => {
+                  const serverFilms = res;
+                  // Нужно отфильтровать свои фильмы
+                  const userSavedFilms = filterUserSavedFilms(
+                    serverFilms,
+                    curUserID
+                  );
+                  // Сохраняем фильмы в стейт
+                  setSavedMovies(userSavedFilms);
+                  // Сохраняем фильмы в стейт
+                  localStorage.setItem("films", JSON.stringify(userSavedFilms));
+                })
+                .catch((err) => console.log(err));
+              // Отправляем в фильмы
               history.push("/movies");
             }
           })
@@ -158,11 +173,15 @@ function App() {
   const handleEditProfile = ({ name, email }) => {
     // Обнуляем ошибки в профиле
     setUpdProfileNetworkError("");
+    // Зануляем сообщения об успехе
+    setIsSuccessSubmit(false);
     // Делаем запрос с обновлением
     editProfile(name, email)
       .then((res) => {
         // Если мы здесь, значит всё ок, обновляем данные пользователя в контексте
         setCurrentUser(res);
+        // Сообщаем пользователю, что всё хорошо
+        setIsSuccessSubmit(true);
       })
       .catch((err) => {
         if (err.status === 409) {
@@ -195,8 +214,16 @@ function App() {
         // Получаем новый массив сохранённых фильмов
         getMovies()
           .then((res) => {
+            const serverFilms = res;
+            // Нужно отфильтровать свои фильмы
+            const userSavedFilms = filterUserSavedFilms(
+              serverFilms,
+              currentUser._id
+            );
             // Сохраняем фильмы в стейт
-            setSavedMovies(res);
+            setSavedMovies(userSavedFilms);
+            // Сохраняем фильмы в стейт
+            localStorage.setItem("films", JSON.stringify(userSavedFilms));
           })
           .catch((err) => console.log(err));
       })
@@ -211,8 +238,16 @@ function App() {
         // Получаем новый массив сохранённых фильмов
         getMovies()
           .then((res) => {
+            const serverFilms = res;
+            // Нужно отфильтровать свои фильмы
+            const userSavedFilms = filterUserSavedFilms(
+              serverFilms,
+              currentUser._id
+            );
             // Сохраняем фильмы в стейт
-            setSavedMovies(res);
+            setSavedMovies(userSavedFilms);
+            // Сохраняем фильмы в стейт
+            localStorage.setItem("films", JSON.stringify(userSavedFilms));
           })
           .catch((err) => console.log(err));
       })
@@ -252,19 +287,24 @@ function App() {
               handleEditProfile={handleEditProfile}
               handleExitAccount={handleExitAccount}
               isAuth={isAuth}
+              isSuccessSubmit={isSuccessSubmit}
             />
-            <Route path="/signup">
-              <Register
-                handleRegister={handleRegister}
-                registerNetworkError={registerNetworkError}
-              />
-            </Route>
-            <Route path="/signin">
-              <Login
-                handleLogin={handleLogin}
-                loginNetworkError={loginNetworkError}
-              />
-            </Route>
+            <UnProtectedRoute
+              exact
+              path="/signup"
+              component={Register}
+              handleRegister={handleRegister}
+              registerNetworkError={registerNetworkError}
+              isAuth={isAuth}
+            />
+            <UnProtectedRoute
+              exact
+              path="/signin"
+              component={Login}
+              handleLogin={handleLogin}
+              loginNetworkError={loginNetworkError}
+              isAuth={isAuth}
+            />
             <Route exact path="/">
               <Main isAuth={isAuth} />
             </Route>
