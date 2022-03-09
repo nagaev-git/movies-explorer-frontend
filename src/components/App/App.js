@@ -24,9 +24,16 @@ import UnProtectedRoute from "../UnProtectedRoute/UnProtectedRoute";
 function App() {
   const history = useHistory();
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
-  const [cardCount, setCardCount] = React.useState(
-    window.innerWidth > 500 ? 12 : 5
-  );
+  const [cardCount, setCardCount] = React.useState(() => {
+    if (window.innerWidth > 800) {
+      return 12;
+    }
+    if (window.innerWidth > 500) {
+      return 8;
+    } else {
+      return 5;
+    }
+  });
   const [currentUser, setCurrentUser] = React.useState({});
   const [registerNetworkError, setRegisterNetworkError] = React.useState("");
   const [loginNetworkError, setLoginNetworkError] = React.useState("");
@@ -80,7 +87,16 @@ function App() {
   }, []);
   // Дёрнем этот юзЭффект если изменится стейт ширины экрана и выставим актуальное количество карточек
   React.useEffect(() => {
-    setCardCount(window.innerWidth > 500 ? 12 : 5);
+    setCardCount(() => {
+      if (window.innerWidth > 800) {
+        return 12;
+      }
+      if (window.innerWidth > 500) {
+        return 8;
+      } else {
+        return 5;
+      }
+    });
   }, [screenWidth]);
 
   const handleLogin = ({ email, password }) => {
