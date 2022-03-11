@@ -4,6 +4,7 @@ import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import Footer from "../Footer/Footer";
 import SideBar from "../SideBar/SideBar";
+import Preloader from "../Preloader/Preloader";
 
 export default function SavedMovies({
   loggedIn,
@@ -14,10 +15,13 @@ export default function SavedMovies({
   isLiked,
   handleLikeClick,
   searchMovies,
+  handleChangeСheckbox,
+  checked,
+  isLoading,
 }) {
   const disableMoreButton = true;
-
   const moviesVisibleCount = movies;
+
   return (
     <>
       <Header
@@ -26,14 +30,22 @@ export default function SavedMovies({
         handleSideBarState={handleSideBarState}
         screenWidth={screenWidth}
       />
-      <SearchForm searchMovies={searchMovies} />
-      <MoviesCardList
-        isLiked={isLiked}
-        handleLikeClick={handleLikeClick}
-        movies={movies}
-        disableMoreButton={disableMoreButton}
-        moviesVisibleCount={moviesVisibleCount}
+      <SearchForm
+        searchMovies={searchMovies}
+        handleChangeСheckbox={handleChangeСheckbox}
+        checked={checked}
       />
+      {isLoading ? (
+        <Preloader />
+      ) : (
+        <MoviesCardList
+          isLiked={isLiked}
+          handleLikeClick={handleLikeClick}
+          movies={movies}
+          disableMoreButton={disableMoreButton}
+          moviesVisibleCount={moviesVisibleCount}
+        />
+      )}
       <Footer />
       <SideBar
         isSideBarOpened={isSideBarOpened}

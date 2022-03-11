@@ -1,6 +1,7 @@
 import "./Movies.css";
 import Header from "../Header/Header";
 import SearchForm from "../SearchForm/SearchForm";
+import Preloader from "../Preloader/Preloader";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import Footer from "../Footer/Footer";
 import SideBar from "../SideBar/SideBar";
@@ -15,19 +16,22 @@ export default function Movies({
   movies,
   searchMovies,
   screenWidth,
+  handleChangeСheckbox,
+  checked,
+  isLoading,
 }) {
   const [showingMoviesCount, setShowingMoviesCount] = useState(0);
   const [addingMoviesCount, setAddingMoviesCount] = useState(0);
 
   // Начальное количество карточек фильмов на экране и количество карточек фильмов, добавляемых при нажании на кнопку "Ещё"
   useEffect(() => {
-    if (screenWidth > 1297) {
-      setShowingMoviesCount(16);
-      setAddingMoviesCount(4);
-    } else if (screenWidth > 1237) {
+    if (screenWidth > 1440) {
+      setShowingMoviesCount(15);
+      setAddingMoviesCount(6);
+    } else if (screenWidth > 800) {
       setShowingMoviesCount(12);
       setAddingMoviesCount(3);
-    } else if (screenWidth > 785) {
+    } else if (screenWidth > 500) {
       setShowingMoviesCount(8);
       setAddingMoviesCount(2);
     } else {
@@ -51,14 +55,22 @@ export default function Movies({
         handleSideBarState={handleSideBarState}
         screenWidth={screenWidth}
       />
-      <SearchForm searchMovies={searchMovies} />
-      <MoviesCardList
-        isLiked={isLiked}
-        handleLikeClick={handleLikeClick}
-        showMoreMovies={showMoreMovies}
-        moviesVisibleCount={moviesVisibleCount}
-        movies={movies}
+      <SearchForm
+        searchMovies={searchMovies}
+        handleChangeСheckbox={handleChangeСheckbox}
+        checked={checked}
       />
+      {isLoading ? (
+        <Preloader />
+      ) : (
+        <MoviesCardList
+          isLiked={isLiked}
+          handleLikeClick={handleLikeClick}
+          showMoreMovies={showMoreMovies}
+          moviesVisibleCount={moviesVisibleCount}
+          movies={movies}
+        />
+      )}
       <Footer />
       <SideBar
         isSideBarOpened={isSideBarOpened}

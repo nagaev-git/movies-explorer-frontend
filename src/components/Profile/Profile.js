@@ -48,7 +48,7 @@ export default function Profile({
       />
       <section className="profile">
         <form className="profile__form" onSubmit={handleSubmit}>
-          <h1 className="profile__form-title">Привет, {data.name}</h1>
+          <h1 className="profile__form-title">Привет, {currentUser.name}</h1>
           <ul className="profile__form-input-list">
             <li className="profile__form-input-item">
               <p className="profile__form-input-label">Имя</p>
