@@ -5,6 +5,7 @@ export default function MoviesCardList({
   moviesVisibleCount,
   showMoreMovies,
   movies,
+  disableMoreButton,
 }) {
   return (
     <section className="movies-card-list">

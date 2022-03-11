@@ -17,6 +17,7 @@ export default function App() {
   const [loggedIn, setLoggedIn] = useState(true);
   const [isSideBarOpened, setIsSideBarOpened] = useState(false);
   const [movies, setMovies] = useState([]);
+  const [foundMovies, setFoundMovies] = useState([]);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentUser, setCurrentUser] = useState({});
   const [waiting, setWaiting] = useState(null);
@@ -25,6 +26,7 @@ export default function App() {
 
   useEffect(() => {
     tokenCheck();
+    initialMoviesCheck();
     // eslint-disable-next-line
   }, []);
 
@@ -34,14 +36,6 @@ export default function App() {
         handleResize();
       }, 1000)
     );
-  }, []);
-
-  useEffect(() => {
-    MoviesApi.getMovies()
-      .then((moviesData) => {
-        setMovies(moviesData);
-      })
-      .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
@@ -64,6 +58,15 @@ export default function App() {
         .catch((err) => console.log(err));
     } else {
       setLoggedIn(false);
+    }
+  };
+
+  const initialMoviesCheck = () => {
+    const initialMovies = JSON.parse(localStorage.getItem("initialMovies"));
+    if (initialMovies) {
+      setMovies(initialMovies);
+      const initialFounMovies = JSON.parse(localStorage.getItem("foundMovies"));
+      setFoundMovies(initialFounMovies);
     }
   };
 
@@ -95,7 +98,7 @@ export default function App() {
         if (res.token) {
           localStorage.setItem("token", res.token);
           setLoggedIn(true);
-          history.push("/");
+          history.push("/movies");
         }
       })
       .catch((err) => console.log(err))
@@ -106,8 +109,10 @@ export default function App() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     setLoggedIn(false);
+    history.push("/");
+    setCurrentUser({});
   };
 
   const handleUpdateUser = (name, email) => {
@@ -132,6 +137,54 @@ export default function App() {
     setScreenWidth(window.innerWidth);
   };
 
+  const searchMovies = (searchText) => {
+    const initialMovies = JSON.parse(localStorage.getItem("initialMovies"));
+    if (!initialMovies) {
+      MoviesApi.getMovies()
+        .then((moviesData) => {
+          if (movies.length === 0) {
+            setFoundMovies(
+              moviesData.filter(
+                (movie) =>
+                  movie.nameRU.toLowerCase().indexOf(searchText.toLowerCase()) >
+                  -1
+              )
+            );
+            setMovies(moviesData);
+            localStorage.setItem("initialMovies", JSON.stringify(moviesData));
+            localStorage.setItem(
+              "foundMovies",
+              JSON.stringify(
+                moviesData.filter(
+                  (movie) =>
+                    movie.nameRU
+                      .toLowerCase()
+                      .indexOf(searchText.toLowerCase()) > -1
+                )
+              )
+            );
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setFoundMovies(
+        initialMovies.filter(
+          (movie) =>
+            movie.nameRU.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+        )
+      );
+      localStorage.setItem(
+        "foundMovies",
+        JSON.stringify(
+          initialMovies.filter(
+            (movie) =>
+              movie.nameRU.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+          )
+        )
+      );
+    }
+  };
+
   return (
     <div className="App">
       <div className="page">
@@ -152,8 +205,9 @@ export default function App() {
               component={Movies}
               isSideBarOpened={isSideBarOpened}
               handleSideBarState={handleSideBarState}
-              movies={movies}
               screenWidth={screenWidth}
+              movies={foundMovies}
+              searchMovies={searchMovies}
             />
             <ProtectedRoute
               exact
@@ -164,6 +218,7 @@ export default function App() {
               movies={movies}
               handleSideBarState={handleSideBarState}
               screenWidth={screenWidth}
+              searchMovies={searchMovies}
             />
             <ProtectedRoute
               exact

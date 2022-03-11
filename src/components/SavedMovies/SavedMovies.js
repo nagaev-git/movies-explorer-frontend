@@ -13,7 +13,11 @@ export default function SavedMovies({
   screenWidth,
   isLiked,
   handleLikeClick,
+  searchMovies,
 }) {
+  const disableMoreButton = true;
+
+  const moviesVisibleCount = movies;
   return (
     <>
       <Header
@@ -22,8 +26,14 @@ export default function SavedMovies({
         handleSideBarState={handleSideBarState}
         screenWidth={screenWidth}
       />
-      <SearchForm />
-      <MoviesCardList movies={movies} />
+      <SearchForm searchMovies={searchMovies} />
+      <MoviesCardList
+        isLiked={isLiked}
+        handleLikeClick={handleLikeClick}
+        movies={movies}
+        disableMoreButton={disableMoreButton}
+        moviesVisibleCount={moviesVisibleCount}
+      />
       <Footer />
       <SideBar
         isSideBarOpened={isSideBarOpened}

@@ -33,6 +33,10 @@
   opacity: 0.8;
 }
 
+.movies-card-list__next-films-button_disabled{
+  display: none;
+}
+
 @media (max-width: 800px) {
   .movies-card-list {
     width: calc(100% - 60px);

@@ -13,6 +13,7 @@ export default function Movies({
   isLiked,
   handleLikeClick,
   movies,
+  searchMovies,
   screenWidth,
 }) {
   const [showingMoviesCount, setShowingMoviesCount] = useState(0);
@@ -50,7 +51,7 @@ export default function Movies({
         handleSideBarState={handleSideBarState}
         screenWidth={screenWidth}
       />
-      <SearchForm />
+      <SearchForm searchMovies={searchMovies} />
       <MoviesCardList
         isLiked={isLiked}
         handleLikeClick={handleLikeClick}
