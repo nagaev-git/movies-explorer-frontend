@@ -1,24 +1,39 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import formValidationHook from "../../utils/hooks/formValidationHook";
 import "./Register.css";
+import { Link, useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-export default function Register({ handleRegister, registerNetworkError }) {
-  const { values, isValid, handleChange, errors } = formValidationHook({
+export default function Register({ handleRegister, waiting, disableButton }) {
+  const history = useHistory();
+
+  useEffect(() => {
+    stateCheck();
+    // eslint-disable-next-line
+  }, []);
+
+  const stateCheck = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      history.push("/");
+    }
+  };
+  const [data, setData] = useState({
+    name: "",
     email: "",
     password: "",
-    name: "",
   });
 
-  const onRegisterSumbit = (evt) => {
-    evt.preventDefault();
-    if (isValid) {
-      handleRegister({
-        email: values.email,
-        name: values.name,
-        password: values.password,
-      });
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { name, email, password } = data;
+    handleRegister(name, email, password);
   };
 
   return (
@@ -29,7 +44,7 @@ export default function Register({ handleRegister, registerNetworkError }) {
         <form
           name="register"
           className="register__form"
-          onSubmit={onRegisterSumbit}
+          onSubmit={handleSubmit}
         >
           <ul className="register__form-input-list">
             <li className="register__form-input-list-item">
@@ -37,85 +52,79 @@ export default function Register({ handleRegister, registerNetworkError }) {
               <input
                 type="text"
                 name="name"
-                className={
-                  errors.name
-                    ? "register__form-input register__form-input_type_error"
-                    : "register__form-input"
-                }
-                placeholder="Введите Ваше имя"
+                id="name"
+                className={"register__form-input"}
+                placeholder="Введите имя"
                 minLength="2"
                 maxLength="18"
+                autoComplete="off"
                 required
-                values={values.name}
+                values={data.name}
                 onChange={handleChange}
               />
+              <span className={"register__form-input-error"} id="name-error">
+                Что-то пошло не так...
+              </span>
             </li>
             <li className="register__form-input-list-item">
               <p className="register__form-input-label">E-mail</p>
               <input
                 type="email"
                 name="email"
-                className={
-                  errors.email
-                    ? "register__form-input register__form-input_type_error"
-                    : "register__form-input"
-                }
-                placeholder="Введите Ваш e-mail"
+                id="email"
+                className={"register__form-input"}
+                placeholder="Введите email"
+                autoComplete="off"
                 required
-                values={values.email}
+                values={data.email}
                 onChange={handleChange}
                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
               />
+              <span className={"register__form-input-error"} id="email-error">
+                Что-то пошло не так...
+              </span>
             </li>
             <li className="register__form-input-list-item">
               <p className="register__form-input-label">Пароль</p>
               <input
                 type="password"
-                className={
-                  errors.password
-                    ? "register__form-input register__form-input_type_error"
-                    : "register__form-input"
-                }
-                placeholder="Введите Ваш пароль"
                 name="password"
+                id="password"
+                className={"register__form-input"}
+                placeholder="Введите пароль"
+                autoComplete="off"
                 minLength="8"
                 maxLength="35"
                 required
-                values={values.password}
+                values={data.password}
                 onChange={handleChange}
               />
               <span
-                className={
-                  !isValid
-                    ? "register__form-input-error register__form-input-error_active"
-                    : "register__form-input-error"
-                }
+                className={"register__form-input-error"}
+                id="password-error"
               >
-                {errors?.name} {errors?.email} {errors?.password}{" "}
-                {registerNetworkError}
-              </span>
-              <span
-                className={
-                  registerNetworkError
-                    ? "register__form-input-error register__form-input-error_active"
-                    : "register__form-input-error"
-                }
-              >
-                {registerNetworkError}
+                Что-то пошло не так...
               </span>
             </li>
           </ul>
           <div className="register__form-button-container">
             <button
               type="submit"
-              className="register__form-submit"
-              disabled={!isValid}
+              className={`register__form-submit ${
+                disableButton ? "register__form-submit_disabled" : ""
+              }`}
+              disabled={disableButton}
+              aria-label={waiting || "Зарегистрироваться"}
             >
-              Зарегистрироваться
+              {waiting || "Зарегистрироваться"}
             </button>
-            <p className="register__form-helper-text">
+            <p className="register__form-helper-text ">
               Уже зарегистрированы?{" "}
-              <Link className="register__form-link" to="/signin">
+              <Link
+                className="register__form-link"
+                to="/signin"
+                aria-label="Войти"
+              >
                 Войти
               </Link>
             </p>

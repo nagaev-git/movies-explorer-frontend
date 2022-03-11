@@ -71,54 +71,6 @@
   visibility: visible;
 }
 
-.search-form__checkbox-button-label {
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 18px;
-  display: flex;
-  align-items: center;
-}
-
-.search-form__input-checkbox-button-invisible {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
-
-.search-form__input-checkbox-button-visible {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 20px;
-  transition: all 0.7s ease;
-}
-
-.search-form__input-checkbox-button-invisible:checked
-  + .search-form__input-checkbox-button-visible {
-  background: url("../../images/smalltumb.svg");
-  margin: 0 14px 0 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.search-form__input-checkbox-button-invisible
-  + .search-form__input-checkbox-button-visible {
-  background: url("../../images/smalltumboff.svg");
-  margin: 0 14px 0 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.search-form__checkbox-title {
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 18px;
-}
-
 .search-form__error-text {
   padding: 0;
   margin: 0;
@@ -141,14 +93,6 @@
   .search-form__checkbox-button-label {
     align-self: flex-end;
   }
-  .search-form__input-checkbox-button-invisible
-    + .search-form__input-checkbox-button-visible {
-    margin: 0 16px 0 0;
-  }
-  .search-form__input-checkbox-button-invisible:checked
-    + .search-form__input-checkbox-button-visible {
-    margin: 0 16px 0 0;
-  }
 }
 
 @media (max-width: 535px) {
@@ -165,17 +109,5 @@
   }
   .search-form__checkbox-button-label {
     align-self: center;
-  }
-  .search-form__checkbox-title {
-    order: -1;
-    margin-right: 15px;
-  }
-  .search-form__input-checkbox-button-invisible
-    + .search-form__input-checkbox-button-visible {
-    margin: 0;
-  }
-  .search-form__input-checkbox-button-invisible:checked
-    + .search-form__input-checkbox-button-visible {
-    margin: 0;
   }
 }

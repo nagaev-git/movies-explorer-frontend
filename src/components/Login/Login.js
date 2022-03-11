@@ -1,20 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import formValidationHook from "../../utils/hooks/formValidationHook";
 import "./Login.css";
+import { Link, useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-export default function login({ handleLogin, loginNetworkError }) {
-  const { values, isValid, handleChange, errors } = formValidationHook({
+export default function Login({ disableButton, waiting, handleLogin }) {
+  const history = useHistory();
+
+  useEffect(() => {
+    stateCheck();
+    // eslint-disable-next-line
+  }, []);
+
+  const stateCheck = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      history.push("/");
+    }
+  };
+  const [data, setData] = useState({
     email: "",
     password: "",
   });
 
-  const onFormSumbit = (evt) => {
-    evt.preventDefault();
-    if (isValid) {
-      // Если все поля валидны, то можно залогиниться
-      handleLogin({ email: values.email, password: values.password });
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { email, password } = data;
+    handleLogin(email, password);
   };
 
   return (
@@ -26,7 +44,7 @@ export default function login({ handleLogin, loginNetworkError }) {
           name="login"
           className="login__form"
           noValidate
-          onSubmit={onFormSumbit}
+          onSubmit={handleSubmit}
         >
           <ul className="login__form-input-list">
             <li className="login__form-input-list-item">
@@ -34,15 +52,13 @@ export default function login({ handleLogin, loginNetworkError }) {
               <input
                 name="email"
                 type="email"
-                className={
-                  errors.email
-                    ? "login__form-input login__form-input_type_error"
-                    : "login__form-input"
-                }
-                placeholder="Введите Ваш email"
-                value={values.email}
+                id="email"
+                className={"login__form-input"}
+                placeholder="Введите email"
+                value={data.email}
                 onChange={handleChange}
                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                autoComplete="off"
                 required
               />
             </li>
@@ -51,45 +67,31 @@ export default function login({ handleLogin, loginNetworkError }) {
               <input
                 name="password"
                 type="password"
-                className={
-                  errors.password
-                    ? "login__form-input login__form-input_type_error"
-                    : "login__form-input"
-                }
-                placeholder="Введите Ваш пароль"
-                value={values.password}
+                id="password"
+                className={"login__form-input"}
+                placeholder="Введите пароль"
+                value={data.password}
                 onChange={handleChange}
+                autoComplete="off"
                 minLength="8"
                 maxLength="35"
                 required
               />
-              <span
-                className={
-                  !isValid
-                    ? "login__form-input-error login__form-input-error_active"
-                    : "login__form-input-error"
-                }
-              >
-                {errors?.email} {errors?.password}
-              </span>
-              <span
-                className={
-                  loginNetworkError
-                    ? "login__form-input-error login__form-input-error_active"
-                    : "login__form-input-error"
-                }
-              >
-                {loginNetworkError}
+              <span className={"login__form-input-error"}>
+                Что-то пошло не так...
               </span>
             </li>
           </ul>
           <div className="login__form-button-container">
             <button
               type="submit"
-              className="login__form-submit"
-              disabled={!isValid}
+              className={`login__form-submit ${
+                disableButton ? "login__form-submit_disabled" : ""
+              }`}
+              disabled={disableButton}
+              aria-label={waiting || "Войти"}
             >
-              Войти
+              {waiting || "Войти"}
             </button>
             <p className="login__form-helper-text">
               Ещё не зарегистрированы?{" "}

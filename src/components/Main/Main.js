@@ -7,11 +7,22 @@ import Techs from "../Techs/Techs";
 import AboutMe from "../AboutMe/AboutMe";
 import Portfolio from "../Portfolio/Portfolio";
 import Footer from "../Footer/Footer";
+import SideBar from "../SideBar/SideBar";
 
-export default function Main({ isAuth }) {
+export default function Main({
+  loggedIn,
+  isSideBarOpened,
+  handleSideBarState,
+  screenWidth,
+}) {
   return (
     <>
-      <Header isAuth={isAuth} />
+      <Header
+        loggedIn={loggedIn}
+        isSideBarOpened={isSideBarOpened}
+        handleSideBarState={handleSideBarState}
+        screenWidth={screenWidth}
+      />
       <main className="main">
         <Promo />
         <AboutProject />
@@ -20,6 +31,10 @@ export default function Main({ isAuth }) {
         <Portfolio />
       </main>
       <Footer />
+      <SideBar
+        isSideBarOpened={isSideBarOpened}
+        handleSideBarState={handleSideBarState}
+      />
     </>
   );
 }

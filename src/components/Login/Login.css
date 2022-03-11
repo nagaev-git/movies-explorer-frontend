@@ -144,7 +144,7 @@
   opacity: 0.8;
 }
 
-.login__form-submit:disabled {
+.login__form-submit_disabled {
   background-color: #f9f9f9;;
   color: #000;
 }

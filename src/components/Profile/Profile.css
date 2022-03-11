@@ -109,7 +109,7 @@
   transition: opacity 0.3s ease;
 }
 
-.profile__button:disabled {
+.profile__button_disabled {
   color: #000;
 }
 
