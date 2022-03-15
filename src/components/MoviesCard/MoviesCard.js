@@ -62,7 +62,11 @@ export default function MoviesCard({
   };
 
   const handlePictureClick = () => {
-    window.open(`${movie.trailer}`, `Трейлер фильма "${movie.nameRU}"`);
+    if (movie.trailer) {
+      window.open(`${movie.trailer}`, `Трейлер фильма "${movie.nameRU}"`);
+    } else {
+      window.open(`${movie.trailerLink}`, `Трейлер фильма "${movie.nameRU}"`);
+    }
   };
 
   const timeCalculating = `${Math.floor(movie.duration / 60)}ч ${
