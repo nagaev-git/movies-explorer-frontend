@@ -21,7 +21,7 @@ export default function Portfolio() {
         <li className="portfolio__item">
           <a
             className="portfolio__link"
-            href="https://github.com/nagaev-git/russian-travel"
+            href="https://nagaev-git.github.io/russian-travel/"
             target="_blank"
             rel="noopener noreferrer"
           >

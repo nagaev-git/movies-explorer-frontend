@@ -5,13 +5,13 @@ import Preloader from "../Preloader/Preloader";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import Footer from "../Footer/Footer";
 import SideBar from "../SideBar/SideBar";
+import NothingFound from "../NothingFound/NothingFound";
 import { useState, useEffect } from "react";
 
 export default function Movies({
   loggedIn,
   isSideBarOpened,
   handleSideBarState,
-  isLiked,
   handleLikeClick,
   movies,
   searchMovies,
@@ -19,11 +19,14 @@ export default function Movies({
   handleChangeСheckbox,
   checked,
   isLoading,
+  saveMovies,
+  deleteSavedMoivies,
+  savedMovies,
+  nothingFoundText,
 }) {
   const [showingMoviesCount, setShowingMoviesCount] = useState(0);
   const [addingMoviesCount, setAddingMoviesCount] = useState(0);
 
-  // Начальное количество карточек фильмов на экране и количество карточек фильмов, добавляемых при нажании на кнопку "Ещё"
   useEffect(() => {
     if (screenWidth > 1440) {
       setShowingMoviesCount(15);
@@ -40,7 +43,6 @@ export default function Movies({
     }
   }, [screenWidth]);
 
-  // Массив карточке после нажания кнопки "Ещё"
   const moviesVisibleCount = movies.slice(0, showingMoviesCount);
 
   function showMoreMovies() {
@@ -59,16 +61,23 @@ export default function Movies({
         searchMovies={searchMovies}
         handleChangeСheckbox={handleChangeСheckbox}
         checked={checked}
+        isSaved={false}
+        isLoading={isLoading}
       />
       {isLoading ? (
         <Preloader />
+      ) : movies.length === 0 ? (
+        <NothingFound nothingFoundText={nothingFoundText} />
       ) : (
         <MoviesCardList
-          isLiked={isLiked}
           handleLikeClick={handleLikeClick}
           showMoreMovies={showMoreMovies}
           moviesVisibleCount={moviesVisibleCount}
           movies={movies}
+          saveMovies={saveMovies}
+          deleteSavedMoivies={deleteSavedMoivies}
+          savedMovies={savedMovies}
+          isSaved={false}
         />
       )}
       <Footer />

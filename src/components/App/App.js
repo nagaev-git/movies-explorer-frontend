@@ -18,19 +18,26 @@ export default function App() {
   const [isSideBarOpened, setIsSideBarOpened] = useState(false);
   const [movies, setMovies] = useState([]);
   const [foundMovies, setFoundMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [savedFoundMovies, setSavedFoundMovies] = useState([]);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentUser, setCurrentUser] = useState({});
   const [waiting, setWaiting] = useState(null);
   const [disableButton, setDisableButton] = useState(false);
   const [checked, setChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisibleRequest, setIsVisibleRequest] = useState(false);
+  const [isBadRequest, setIsBadRequest] = useState(false);
+  const [nothingFoundText, setNothingFoundText] = useState("");
   const history = useHistory();
 
   useEffect(() => {
     tokenCheck();
-    initialMoviesCheck();
-    // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    initialMoviesCheck();
+  }, [isLoading, loggedIn]);
 
   useEffect(() => {
     window.addEventListener("resize", () =>
@@ -50,6 +57,8 @@ export default function App() {
     }
   }, [loggedIn]);
 
+  const filterUserSavedFilms = (savedFilms, userId) => savedFilms.filter((film) => film.owner === userId)
+
   const tokenCheck = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -65,16 +74,32 @@ export default function App() {
 
   const initialMoviesCheck = () => {
     const initialMovies = JSON.parse(localStorage.getItem("initialMovies"));
+    const savedMovies = JSON.parse(localStorage.getItem("savedMovies"));
+    const savedFoundMovies = JSON.parse(
+      localStorage.getItem("savedFoundMovies")
+    );
     if (initialMovies) {
       setMovies(initialMovies);
-      const initialFounMovies = JSON.parse(localStorage.getItem("foundMovies"));
-      setFoundMovies(initialFounMovies);
+      const initialFoundMovies = JSON.parse(
+        localStorage.getItem("foundMovies")
+      );
+      setFoundMovies(initialFoundMovies);
+      setSavedMovies(savedMovies);
+      if (savedFoundMovies) {
+        setSavedFoundMovies(savedFoundMovies);
+      } else {
+        setSavedFoundMovies(savedMovies);
+      }
+    } else {
+      setMovies([]);
+      setFoundMovies([]);
     }
   };
 
   const handleRegister = (name, email, password) => {
     setWaiting("Регистрация...");
     setDisableButton(true);
+    setIsBadRequest(false);
     MainApi.register(name, email, password)
       .then((res) => {
         if (res) {
@@ -85,6 +110,7 @@ export default function App() {
       })
       .catch((err) => {
         console.log(err);
+        setIsBadRequest(true);
       })
       .finally(() => {
         setWaiting(null);
@@ -95,6 +121,7 @@ export default function App() {
   const handleLogin = (email, password) => {
     setWaiting("Вход...");
     setDisableButton(true);
+    setIsBadRequest(false);
     MainApi.login(email, password)
       .then((res) => {
         if (res.token) {
@@ -103,7 +130,10 @@ export default function App() {
           history.push("/movies");
         }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err);
+        setIsBadRequest(true);
+      })
       .finally(() => {
         setWaiting(null);
         setDisableButton(false);
@@ -114,7 +144,7 @@ export default function App() {
     localStorage.clear();
     setLoggedIn(false);
     history.push("/");
-    setCurrentUser({});
+    setCurrentUser("");
   };
 
   const handleChangeСheckbox = () => {
@@ -127,8 +157,14 @@ export default function App() {
     MainApi.editProfile(name, email)
       .then((data) => {
         setCurrentUser(data);
+        setIsVisibleRequest(true);
+        setIsBadRequest(false);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err);
+        setIsVisibleRequest(true);
+        setIsBadRequest(true);
+      })
       .finally(() => {
         setWaiting(null);
         setDisableButton(false);
@@ -143,71 +179,107 @@ export default function App() {
     setScreenWidth(window.innerWidth);
   };
 
+  const searchShot = (moviesArray, searchText) => {
+    const foundResult = moviesArray.filter(
+      (movie) =>
+        movie.nameRU.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+    );
+    if (checked) {
+      return foundResult.filter((movie) => movie.duration <= 40);
+    } else {
+      return foundResult;
+    }
+  };
+
   const searchMovies = (searchText) => {
     const initialMovies = JSON.parse(localStorage.getItem("initialMovies"));
     setIsLoading(true);
+    setNothingFoundText("Ничего не найдено");
     if (!initialMovies) {
       MoviesApi.getMovies()
         .then((moviesData) => {
           if (movies.length === 0) {
-            const foundResult = moviesData.filter(
-              (movie) =>
-                movie.nameRU.toLowerCase().indexOf(searchText.toLowerCase()) >
-                -1
+            const foundResult = searchShot(moviesData, searchText);
+            setFoundMovies(foundResult);
+            setMovies(moviesData);
+            localStorage.setItem("initialMovies", JSON.stringify(moviesData));
+            localStorage.setItem("foundMovies", JSON.stringify(foundResult));
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          setNothingFoundText(
+            "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
+          );
+        });
+      MainApi.getMovies()
+        .then((moviesData) => {
+          if (movies.length === 0) {
+            const userSavedFilms = filterUserSavedFilms(moviesData, currentUser._id)
+            const foundResult = searchShot(userSavedFilms, searchText);
+            setSavedFoundMovies(foundResult);
+            setSavedMovies(userSavedFilms);
+            localStorage.setItem("savedMovies", JSON.stringify(userSavedFilms));
+            localStorage.setItem(
+              "savedFoundMovies",
+              JSON.stringify(foundResult)
             );
-            if (checked) {
-              const foundShortResult = foundResult.filter(
-                (movie) => movie.duration <= 40
-              );
-              setFoundMovies(foundShortResult);
-              setMovies(moviesData);
-              localStorage.setItem("initialMovies", JSON.stringify(moviesData));
-              localStorage.setItem(
-                "foundMovies",
-                JSON.stringify(foundShortResult)
-              );
-            } else {
-              const foundNotShortResult = foundResult.filter(
-                (movie) => movie.duration > 40
-              );
-              setFoundMovies(foundNotShortResult);
-              setMovies(moviesData);
-              localStorage.setItem("initialMovies", JSON.stringify(moviesData));
-              localStorage.setItem(
-                "foundMovies",
-                JSON.stringify(foundNotShortResult)
-              );
-            }
           }
         })
         .catch((err) => console.log(err));
     } else {
-      const foundResult = initialMovies.filter(
-        (movie) =>
-          movie.nameRU.toLowerCase().indexOf(searchText.toLowerCase()) > -1
-      );
-      if (checked) {
-        const foundShortResult = foundResult.filter(
-          (movie) => movie.duration <= 40
-        );
-        setFoundMovies(foundShortResult);
-        localStorage.setItem("foundMovies", JSON.stringify(foundShortResult));
-      } else {
-        const foundNotShortResult = foundResult.filter(
-          (movie) => movie.duration > 40
-        );
-        setFoundMovies(foundNotShortResult);
-        localStorage.setItem(
-          "foundMovies",
-          JSON.stringify(foundNotShortResult)
-        );
-      }
+      const foundResult = searchShot(initialMovies, searchText);
+      localStorage.setItem("foundMovies", JSON.stringify(foundResult));
     }
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1500);
   };
 
+  const saveMovies = (movie) => {
+    MainApi.saveMovies(movie)
+      .then((res) => {
+        const movies = [...savedMovies, res];
+        localStorage.setItem("savedMovies", JSON.stringify(movies));
+        localStorage.setItem("savedFoundMovies", JSON.stringify(movies));
+        setSavedMovies(movies);
+        setSavedFoundMovies(movies);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const searchSavedMovies = (searchText) => {
+    const initialSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
+    setIsLoading(true);
+    if (initialSavedMovies) {
+      const foundResult = searchShot(initialSavedMovies, searchText);
+      localStorage.setItem("savedFoundMovies", JSON.stringify(foundResult));
+      setSavedFoundMovies(foundResult);
+    }
+    setNothingFoundText("Ничего не найдено");
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const filterMoviesById = (collection, id) => {
+    return collection.filter((item) => {
+      return item._id !== id;
+    });
+  };
+
+  const deleteSavedMoivies = (id) => {
+    MainApi.deleteSavedMovies(id)
+      .then(() => {
+        const movies = filterMoviesById(savedMovies, id);
+        setSavedMovies(movies);
+        localStorage.setItem("savedMovies", JSON.stringify(movies));
+        const foundMovies = filterMoviesById(savedFoundMovies, id);
+        setSavedFoundMovies(foundMovies);
+        localStorage.setItem("savedFoundMovies", JSON.stringify(foundMovies));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="App">
       <div className="page">
@@ -234,20 +306,27 @@ export default function App() {
               handleChangeСheckbox={handleChangeСheckbox}
               checked={checked}
               isLoading={isLoading}
+              saveMovies={saveMovies}
+              deleteSavedMoivies={deleteSavedMoivies}
+              savedMovies={savedMovies}
+              nothingFoundText={nothingFoundText}
             />
             <ProtectedRoute
               exact
               path="/saved-movies"
               loggedIn={loggedIn}
               component={SavedMovies}
+              movies={savedFoundMovies}
               isSideBarOpened={isSideBarOpened}
-              movies={movies}
               handleSideBarState={handleSideBarState}
               screenWidth={screenWidth}
-              searchMovies={searchMovies}
+              searchMovies={searchSavedMovies}
               handleChangeСheckbox={handleChangeСheckbox}
               checked={checked}
               isLoading={isLoading}
+              deleteSavedMoivies={deleteSavedMoivies}
+              savedMovies={savedMovies}
+              nothingFoundText={nothingFoundText}
             />
             <ProtectedRoute
               exact
@@ -260,7 +339,10 @@ export default function App() {
               handleUpdateUser={handleUpdateUser}
               waiting={waiting}
               disableButton={disableButton}
+              currentUser={currentUser}
               handleSignOut={handleSignOut}
+              isBadRequest={isBadRequest}
+              isVisibleRequest={isVisibleRequest}
             />
             <Route exact path="/signup">
               <Register
@@ -268,6 +350,7 @@ export default function App() {
                 handleRegister={handleRegister}
                 waiting={waiting}
                 disableButton={disableButton}
+                isBadRequest={isBadRequest}
               />
             </Route>
             <Route exact path="/signin">
@@ -276,6 +359,7 @@ export default function App() {
                 handleLogin={handleLogin}
                 waiting={waiting}
                 disableButton={disableButton}
+                isBadRequest={isBadRequest}
               />
             </Route>
             <Route path="*">

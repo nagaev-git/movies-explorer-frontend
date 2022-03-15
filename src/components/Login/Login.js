@@ -1,8 +1,14 @@
 import "./Login.css";
 import { Link, useHistory } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import useFormValidation from "../../utils/hooks/useFormWithValidation";
 
-export default function Login({ disableButton, waiting, handleLogin }) {
+export default function Login({
+  disableButton,
+  waiting,
+  handleLogin,
+  isBadRequest,
+}) {
   const history = useHistory();
 
   useEffect(() => {
@@ -16,23 +22,17 @@ export default function Login({ disableButton, waiting, handleLogin }) {
       history.push("/");
     }
   };
-  const [data, setData] = useState({
+  const { values, errors, isValid, handleChange } = useFormValidation({
     email: "",
     password: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: value,
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { email, password } = data;
-    handleLogin(email, password);
+    const { email, password } = values;
+    if (isValid) {
+      handleLogin(email, password);
+    }
   };
 
   return (
@@ -53,46 +53,64 @@ export default function Login({ disableButton, waiting, handleLogin }) {
                 name="email"
                 type="email"
                 id="email"
-                className={"login__form-input"}
+                className={`login__form-input  ${
+                  errors.email && "login__form-input-error"
+                }`}
                 placeholder="Введите email"
-                value={data.email}
+                value={values.email}
                 onChange={handleChange}
                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                readOnly={waiting}
                 autoComplete="off"
                 required
               />
             </li>
+            {errors.email && (
+              <span className="login__form-input-error" id="email-error">
+                {errors.email}
+              </span>
+            )}
             <li className="login__form-input-list-item">
               <p className="login__form-input-label">Пароль</p>
               <input
                 name="password"
                 type="password"
                 id="password"
-                className={"login__form-input"}
+                className={`login__form-input  ${
+                  errors.password && "login__form-input-error"
+                }`}
                 placeholder="Введите пароль"
-                value={data.password}
+                value={values.password}
                 onChange={handleChange}
+                readOnly={waiting}
                 autoComplete="off"
                 minLength="8"
                 maxLength="35"
                 required
               />
-              <span className={"login__form-input-error"}>
-                Что-то пошло не так...
-              </span>
+              {errors.password && (
+                <span className="login__form-input-error" id="password-error">
+                  {errors.password}
+                </span>
+              )}
             </li>
           </ul>
           <div className="login__form-button-container">
             <button
               type="submit"
               className={`login__form-submit ${
-                disableButton ? "login__form-submit_disabled" : ""
+                disableButton || !isValid ? "login__form-submit_disabled" : ""
               }`}
-              disabled={disableButton}
+              disabled={disableButton || !isValid}
               aria-label={waiting || "Войти"}
             >
               {waiting || "Войти"}
             </button>
+            {isBadRequest && (
+              <span className="login__form-submit_error">
+                При попытке входа произошла ошибка.
+              </span>
+            )}
             <p className="login__form-helper-text">
               Ещё не зарегистрированы?{" "}
               <Link className="login__form-link" to="/signup">

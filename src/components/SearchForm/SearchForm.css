@@ -65,11 +65,12 @@
   align-self: center;
   visibility: hidden;
   transition: visibility 0.8s ease;
-}
-
-.search-form__input-error-text_active {
   visibility: visible;
 }
+
+/* .search-form__input-error-text_active {
+  visibility: visible;
+} */
 
 .search-form__error-text {
   padding: 0;

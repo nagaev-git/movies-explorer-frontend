@@ -106,14 +106,12 @@
   align-self: flex-start;
   color: #ff3055;
   visibility: hidden;
-  opacity: visibility .3s ease;
-}
-
-.login__form-input-error_active {
+  opacity: visibility 0.3s ease;
   visibility: visible;
 }
 
 .login__form-button-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -145,8 +143,20 @@
 }
 
 .login__form-submit_disabled {
-  background-color: #f9f9f9;;
+  background-color: #f9f9f9;
   color: #000;
+}
+
+.login__form-submit_error {
+  margin: 0;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ff3055;
+  top: 50%;
+  transition: 0.3s;
+  width: 100%;
+  text-align: center;
 }
 
 .login__form-helper-text {

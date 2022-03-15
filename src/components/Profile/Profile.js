@@ -1,8 +1,9 @@
 import "./Profile.css";
 import Header from "../Header/Header";
 import SideBar from "../SideBar/SideBar";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import useFormValidation from "../../utils/hooks/useFormWithValidation";
 
 export default function Profile({
   loggedIn,
@@ -11,33 +12,37 @@ export default function Profile({
   screenWidth,
   handleUpdateUser,
   waiting,
-  disableButton,
   handleSignOut,
+  disableButton,
+  isBadRequest,
+  isVisibleRequest,
 }) {
-  const [data, setData] = useState({
-    name: "",
-    email: "",
+  const currentUser = useContext(CurrentUserContext);
+  const nameRef = useRef("");
+  const emailRef = useRef("");
+
+  const { values, errors, handleChange, isValid } = useFormValidation({
+    name: nameRef.current.value,
+    email: emailRef.current.value,
   });
 
-  const currentUser = useContext(CurrentUserContext);
+  const [isSameUserData, setIsSameUserData] = useState(true);
 
   useEffect(() => {
-    setData(currentUser);
-  }, [currentUser]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: value,
-    });
-  };
+    setIsSameUserData(
+      nameRef.current.value === currentUser.name &&
+        emailRef.current.value === currentUser.email
+    );
+  }, [values.name, values.email, currentUser.name, currentUser.email]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email } = data;
+    const name = nameRef.current.value;
+    const email = emailRef.current.value;
     handleUpdateUser(name, email);
+    e.target.reset();
   };
+
   return (
     <>
       <Header
@@ -47,7 +52,7 @@ export default function Profile({
         screenWidth={screenWidth}
       />
       <section className="profile">
-        <form className="profile__form" onSubmit={handleSubmit}>
+        <form className="profile__form" onSubmit={handleSubmit} noValidate>
           <h1 className="profile__form-title">Привет, {currentUser.name}</h1>
           <ul className="profile__form-input-list">
             <li className="profile__form-input-item">
@@ -61,10 +66,17 @@ export default function Profile({
                 minLength="2"
                 maxLength="18"
                 autoComplete="off"
-                value={data.name || ""}
+                defaultValue={currentUser.name}
+                ref={nameRef}
                 onChange={handleChange}
+                readOnly={waiting}
                 required
               />
+              {errors.name && (
+                <span className="profile__error-field" id="name-error">
+                  {errors.name}
+                </span>
+              )}
             </li>
             <li className="profile__form-input-item">
               <p className="profile__form-input-label">E-mail</p>
@@ -76,22 +88,45 @@ export default function Profile({
                 placeholder="Ваш e-mail"
                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                 autoComplete="off"
-                value={data.email || ""}
+                defaultValue={currentUser.email}
+                ref={emailRef}
                 onChange={handleChange}
+                readOnly={waiting}
                 required
               />
+              {errors.email && (
+                <span
+                  className="profile__error-field profile__error-field_email"
+                  id="email-error"
+                >
+                  {errors.email}
+                </span>
+              )}
             </li>
           </ul>
           <div className="profile__button-container">
             <button
               type="submit"
               className={`profile__button ${
-                disableButton ? "profile__button_disabled" : ""
+                disableButton || isSameUserData || !isValid
+                  ? "profile__button_disabled"
+                  : ""
               }`}
-              disabled={disableButton}
+              disabled={disableButton || isSameUserData || !isValid}
             >
               {waiting || "Редактировать"}
             </button>
+            {isVisibleRequest &&
+              (isBadRequest ? (
+                <span className="profile__edit-error">
+                  При обновлении профиля произошла ошибка
+                </span>
+              ) : (
+                <span className="profile__edit-ok">
+                  Профиль успешно обновлен
+                </span>
+              ))}
+
             <button
               type="button"
               className="profile__button profile__button_type_exit"
