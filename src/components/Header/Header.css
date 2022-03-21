@@ -28,99 +28,7 @@
   margin-left: 44px;
 }
 
-.header__navigation-sidebar {
-  display: none;
-}
 
-.header__navigation-sidebar_active {
-  display: flex;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-
-.header__navigation-sidebar-close-btn {
-  position: absolute;
-  top: 29px;
-  right: 29px;
-  background-image: url("../../images/close_button.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: transparent;
-  width: 22px;
-  height: 22px;
-  border: none;
-  z-index: 2;
-  transition: opacity 0.3 ease;
-  padding: 0;
-}
-
-.header__navigation-sidebar-close-btn:hover {
-  opacity: 0.8;
-}
-
-.header__navigation-sidebar-container {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #ffffff;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 67.71vw;
-  height: 100%;
-  z-index: 1;
-}
-
-.header__navigation-sidebar-container-item {
-  align-self: center;
-}
-
-.header__navigation-sidebar-container-item:first-child {
-  margin-top: 159px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  align-items: center;
-}
-
-.header__navigation-sidebar-container-item:last-child {
-  margin-bottom: 90px;
-}
-
-.header__navigation-link {
-  color: #000000;
-  text-decoration: none;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 18px;
-  text-align: right;
-  transition: opacity 0.3 ease;
-}
-.header__navigation-link_type_sidebar {
-  text-align: center;
-}
-.header__navigation-link:hover {
-  opacity: 0.8;
-}
-
-.header__navigation-link_type_active-header {
-  font-weight: 500;
-}
-
-.header__navigation-link_type_active-sidebar {
-  font-weight: 500;
-  padding-bottom: 4px;
-  box-sizing: border-box;
-  border-bottom: 2px solid #000000;
-}
 
 .header__profile-link {
   display: flex;
@@ -207,9 +115,6 @@
   .header__profile-link {
     display: none;
   }
-  .header__profile-link_type_sidebar {
-    display: flex;
-  }
   .header__menu-button {
     display: block;
   }
@@ -235,20 +140,6 @@
   .header__auth-link_type_login {
     padding: 5px 12px;
     width: 54px;
-  }
-  .header__navigation-sidebar-container {
-    width: 100%;
-  }
-  .header__navigation-sidebar-close-btn {
-    top: 13.44px;
-    right: 13.44px;
-  }
-  .header__navigation-sidebar-container-item:first-child {
-    margin-top: 144px;
-    gap: 24px;
-  }
-  .header__navigation-sidebar-container-item:last-child {
-    margin-bottom: 46px;
   }
   .header__menu-button {
     width: 40px;

@@ -10,7 +10,7 @@ export default function Portfolio() {
         <li className="portfolio__item">
           <a
             className="portfolio__link"
-            href="https://github.com/nagaev1/how-to-learn"
+            href="https://nagaev-git.github.io/how-to-learn/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -21,7 +21,7 @@ export default function Portfolio() {
         <li className="portfolio__item">
           <a
             className="portfolio__link"
-            href="https://github.com/nagaev1/russian-travel"
+            href="https://nagaev-git.github.io/russian-travel/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -32,7 +32,7 @@ export default function Portfolio() {
         <li className="portfolio__item">
           <a
             className="portfolio__link"
-            href="https://github.com/nagaev1/react-mesto-api-full"
+            href="https://mesto.site.nomoredomains.rocks/"
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -50,6 +50,7 @@
 
 .movies-button_type_active-like-btn {
   background-image: url(../../images/like_active.svg);
+  background-repeat: no-repeat;
   width: 21px;
   height: 21px;
 }
@@ -73,6 +74,7 @@
 
 .movies-card__button_type_close-btn {
   background-image: url(../../images/movie-delete-button.svg);
+  background-repeat: no-repeat;
   width: 21px;
   height: 21px;
 }

@@ -106,9 +106,6 @@
   align-self: flex-start;
   color: #ff3055;
   visibility: hidden;
-}
-
-.register__form-input-error_active {
   visibility: visible;
 }
 
@@ -141,6 +138,23 @@
 
 .register__form-submit:hover {
   opacity: 0.8;
+}
+
+.register__form-submit_disabled {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+.register__form-submit_error {
+  margin: 0;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ff3055;
+  top: 50%;
+  transition: 0.3s;
+  width: 100%;
+  text-align: center;
 }
 
 .register__form-helper-text {
